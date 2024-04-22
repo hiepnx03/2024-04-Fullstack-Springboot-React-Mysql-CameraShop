@@ -14,17 +14,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    // Phương thức để lấy danh sách sản phẩm
-    private final ProductService productService;
 
-    @Autowired
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
-
-    @GetMapping("/list")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
-    }
 
 }
