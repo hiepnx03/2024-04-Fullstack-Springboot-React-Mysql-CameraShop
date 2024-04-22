@@ -15,6 +15,9 @@ export async function layToanBoSanPham(): Promise<ProductModel[]> {
             listPrice: product.listPrice,
             sellPrice: product.sellPrice,
             description: product.description,
+            quantity: product.quantity,
+            soldQuantity: product.soldQuantity,
+            discountPercent: product.discountPercent,
         }));
     } catch (error) {
         console.error('Lỗi khi tải dữ liệu sản phẩm:', error);
