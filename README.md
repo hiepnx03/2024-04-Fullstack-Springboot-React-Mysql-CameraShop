@@ -21,4 +21,8 @@
 ```
 8h34 thêm sản phẩm có chọn danh mục [10h13 thất bại]
 10h13 đọc hiểu lại code [10h40 thất bại]
+<<<<<<< HEAD
 ```
+=======
+```
+>>>>>>> 9de8fd356ecb2157640aaadfe479017489339a8c
