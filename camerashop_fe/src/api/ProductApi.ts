@@ -26,6 +26,20 @@ export async function layToanBoSanPham(): Promise<ProductModel[]> {
         throw error;
     }
 }
+export async function getAllProducts(): Promise<ProductModel[]> {
+    try {
+        const response = await fetch('/api/products'); // Adjust the URL according to your backend API endpoint
+        if (!response.ok) {
+            throw new Error('Failed to fetch products');
+        }
+        const products = await response.json();
+        return products;
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error; // You can handle the error as needed in the calling code
+    }
+}
+
 
 export async function themSanPham(newProduct: ProductModel): Promise<void> {
     try {

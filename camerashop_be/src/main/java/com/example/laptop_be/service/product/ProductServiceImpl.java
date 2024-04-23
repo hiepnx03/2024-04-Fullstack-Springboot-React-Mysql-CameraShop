@@ -6,16 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ProductServiceImpl implements ProductService{
-    private final ProductRepository productRepository;
+public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private ProductRepository productRepository;
 
     @Override
     public List<Product> getAllProducts() {
@@ -23,14 +19,15 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Optional<Product> getProductById(Long id) {
-        return Optional.empty();
+    public Product getProductById(int id) {
+        return productRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Product saveProduct(Product product) {
-        return null;
+    public Product addProduct(Product product) {
+        // You can add validation or additional logic here if needed
+        return productRepository.save(product);
     }
 
-
+    // Implement other CRUD methods as needed
 }

@@ -3,12 +3,13 @@ package com.example.laptop_be.service.product;
 import com.example.laptop_be.entity.Product;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductService {
+
     List<Product> getAllProducts();
 
-    public Optional<Product> getProductById(Long id);
+    Product getProductById(int id);
 
-    public Product saveProduct(Product product);
+    Product addProduct(Product product);
+
 }
