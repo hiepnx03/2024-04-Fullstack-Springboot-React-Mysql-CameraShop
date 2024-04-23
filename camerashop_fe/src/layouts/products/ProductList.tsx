@@ -30,7 +30,7 @@ const ProductList: React.FC = () => {
 
     return (
         <div className="container mt-4">
-            <div className="row row-cols-1 row-cols-md-3 g-4">
+            <div className="row row-cols-1 row-cols-md-3 g-4 mb-4">
                 {productList.map((product) => (
                     <div key={product.idProduct} className="col">
                         <div className="card h-100">
@@ -39,6 +39,10 @@ const ProductList: React.FC = () => {
                                 <p className="card-text">Giá niêm yết: {product.listPrice}</p>
                                 <p className="card-text">Giá bán: {product.sellPrice}</p>
                                 <p className="card-text">Mô tả: {product.description}</p>
+                                <p className="card-text">Số lượng: {product.quantity}</p>
+                                <p className="card-text">Xếp hạng: {product.avgRating}</p>
+                                <p className="card-text">Đã bán: {product.soldQuantity}</p>
+                                <p className="card-text">Giảm giá: {product.discountPercent}</p>
                             </div>
                         </div>
                     </div>

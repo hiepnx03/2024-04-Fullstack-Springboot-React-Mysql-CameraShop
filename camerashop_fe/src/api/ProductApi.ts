@@ -10,14 +10,16 @@ export async function layToanBoSanPham(): Promise<ProductModel[]> {
             throw new Error('Dữ liệu sản phẩm không hợp lệ');
         }
         return data._embedded.products.map((product: any) => ({
-            idProduct: product.idProduct,
-            productName: product.productName,
-            listPrice: product.listPrice,
-            sellPrice: product.sellPrice,
-            description: product.description,
-            quantity: product.quantity,
-            soldQuantity: product.soldQuantity,
-            discountPercent: product.discountPercent,
+            ...product
+            // idProduct: product.idProduct,
+            // productName: product.productName,
+            // listPrice: product.listPrice,
+            // sellPrice: product.sellPrice,
+            // description: product.description,
+            // quantity: product.quantity,
+            // avgRating: product.avgRating,
+            // soldQuantity: product.soldQuantity,
+            // discountPercent: product.discountPercent,
         }));
     } catch (error) {
         console.error('Lỗi khi tải dữ liệu sản phẩm:', error);

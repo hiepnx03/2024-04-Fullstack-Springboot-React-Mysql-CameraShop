@@ -7,12 +7,13 @@ import { capNhatSanPham, layToanBoSanPham, themSanPham, xoaSanPham } from "../ap
 
 const ProductManagement: React.FC = () => {
     const [productList, setProductList] = useState<ProductModel[]>([]);
-    const [isAdding, setIsAdding] = useState(false); // State to control the visibility of the modal
+    const [isAdding, setIsAdding] = useState(false); // Trạng thái để điều khiển sự hiển thị của modal
 
     useEffect(() => {
         loadData(); // Load dữ liệu sản phẩm khi component được render
     }, []);
 
+    // Hàm để tải dữ liệu sản phẩm từ API
     const loadData = async () => {
         try {
             const data = await layToanBoSanPham();
@@ -22,6 +23,7 @@ const ProductManagement: React.FC = () => {
         }
     };
 
+    // Hàm để xử lý việc cập nhật sản phẩm
     const handleUpdateProduct = async (updatedProduct: ProductModel) => {
         try {
             await capNhatSanPham(updatedProduct);
@@ -31,6 +33,7 @@ const ProductManagement: React.FC = () => {
         }
     };
 
+    // Hàm để xử lý việc xóa sản phẩm
     const handleDeleteProduct = async (productId: number) => {
         try {
             await xoaSanPham(productId);
@@ -40,23 +43,23 @@ const ProductManagement: React.FC = () => {
         }
     };
 
-    // Function to handle adding a new product
+    // Hàm để xử lý việc thêm mới sản phẩm
     const handleAddProduct = async (newProduct: ProductModel) => {
         try {
             await themSanPham(newProduct);
             await loadData(); // Sau khi thêm sản phẩm, cập nhật lại danh sách
-            setIsAdding(false); // Close the modal after adding the product
+            setIsAdding(false); // Đóng modal sau khi thêm sản phẩm
         } catch (error) {
             console.error('Lỗi khi thêm sản phẩm:', error);
         }
     };
 
-    // Function to handle closing the modal
+    // Hàm để đóng modal
     const closeModal = () => {
         setIsAdding(false);
     };
 
-    // Function to handle opening the modal
+    // Hàm để mở modal
     const openModal = () => {
         setIsAdding(true);
     };
