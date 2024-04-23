@@ -1,8 +1,7 @@
-package com.example.laptop_be.service;
+package com.example.laptop_be.service.product;
 
 import com.example.laptop_be.dao.ProductRepository;
 import com.example.laptop_be.entity.Product;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

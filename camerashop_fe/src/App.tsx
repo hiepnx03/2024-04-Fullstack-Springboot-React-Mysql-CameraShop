@@ -4,6 +4,7 @@ import Footer from './layouts/header-footer/Footer';
 import Navbar from './layouts/header-footer/Navbar';
 import ProductList from './layouts/products/ProductList';
 import ProductManagement from "./admin/ProductManagement";
+import CategoryManagement from "./admin/CategoryManagement";
 
 function App() {
     return (
@@ -12,7 +13,9 @@ function App() {
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<ProductList />} />
-                    <Route path="/admin" element={<ProductManagement />} />
+                    <Route path="/admin/product" element={<ProductManagement />} />
+                    <Route path="/admin/category" element={<CategoryManagement/>} />
+
                 </Routes>
                 <Footer />
             </BrowserRouter>

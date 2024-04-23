@@ -1,4 +1,4 @@
-package com.example.laptop_be.service;
+package com.example.laptop_be.service.product;
 
 import com.example.laptop_be.entity.Product;
 

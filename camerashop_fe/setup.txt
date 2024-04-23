@@ -64,7 +64,8 @@ npm install @mui/icons-material
 npm install @mui/material @types/material-ui
 npm install @mui/material @emotion/react @emotion/styled
 npm install @mui/material @mui/icons-material @emotion/react @emotion/styled
-npm install @emotion/react @emotion/styled
+
+
 
 npm install @emotion/react
 npm install @emotion/core@10.1.1
@@ -75,3 +76,7 @@ npm install react-modal
 
 npm install --save-dev @emotion/babel-plugin
 npm install --save-dev @types/react-modal
+
+npm install react-bootstrap bootstrap
+npm install @types/react-bootstrap
+npm install react-bootstrap bootstrap @types/react-bootstrap
