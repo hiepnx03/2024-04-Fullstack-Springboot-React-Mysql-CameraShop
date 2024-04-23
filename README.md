@@ -4,25 +4,22 @@
 
 ### Part 1 Day 24-04-22
 ```
-4h23 cấu hình mysql [4h25 hoàn thiện]
-4h25 thêm 1 ít dữ liệu [4h54 hoàn thiện]
-4h54 hiện thị bên FE [7h45 hoàn thiện]
-9h12 hiển thị bảng con nhập dữ liệu [11h14 đi ngủ]
+4:23 AM cấu hình mysql [4:25 AM hoàn thiện]
+4:25 AM thêm 1 ít dữ liệu [4:54 AM hoàn thiện]
+4:54 AM hiện thị bên FE [7:45 AM hoàn thiện]
+9:12 AM hiển thị bảng con nhập dữ liệu [11:14 AM đi sleep]
 ```
 ### Part 2 Day 24-04-23
 ```
-4h46 thêm database [5h38 hoàn thiện]
-5h38 Chỉnh sửa hiển thị FE [5h45 hoàn thiện]
-5h45 hiển thị thêm các trường [7h05 hoàn thiện]
-7h10 Danh mục sản phẩm [9h25 hoàn thiện]
-9h27 thêm sản phẩm có chọn danh mục [9h53 thất bại đi ngủ]
+4:46 AM thêm database [5:38 AM hoàn thiện]
+5:38 AM Chỉnh sửa hiển thị FE [5:45 AM hoàn thiện]
+5:45 AM hiển thị thêm các trường [7:05 AM hoàn thiện]
+7:10 AM Danh mục sản phẩm [9:25 AM hoàn thiện]
+9:27 AM thêm sản phẩm có chọn danh mục [9:53 AM thất bại đi ngủ]
 ```
 ### Part 3 Day 24-04-23
 ```
-8h34 thêm sản phẩm có chọn danh mục [10h13 thất bại]
-10h13 đọc hiểu lại code [10h40 thất bại]
-<<<<<<< HEAD
+8:34 PM thêm sản phẩm có chọn danh mục [10:13 PM thất bại]
+10:13 PM đọc hiểu lại code [10:40 PM thất bại]
 ```
-=======
-```
->>>>>>> 9de8fd356ecb2157640aaadfe479017489339a8c
+
