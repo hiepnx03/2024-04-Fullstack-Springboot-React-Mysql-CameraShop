@@ -86,7 +86,7 @@ const ProductTable: React.FC<ProductTableProps> = ({products, onUpdate, onDelete
     return (
         <div>
             {/* Bảng hiển thị các sản phẩm */}
-            <h3 className="mb-4">Bảng Sản phẩm</h3>
+            <h3 className="mb-4 text-center">Bảng Sản phẩm</h3>
             <table className="table">
                 <thead>
                 <tr>
