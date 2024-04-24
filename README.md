@@ -29,5 +29,7 @@
 sử dụng @JsonIdentityInfo,@JsonManagedReference và @JsonBackReference
 6:53 AM thực hiện sửa để hiển thị bên FE [ 8:39 AM xong hiển thị nhưng lỗi chức năng]
 8:40 AM back up bản JPQL và quay về bản Part 3 [8:49 AM back up thành công]
+8:40 AM back up bản JPQL và quay về bản Part 3 [8:49 AM back up thành công]
+9:00 AM tham khảo code [9h53 đi ngủ]
 ```
 
