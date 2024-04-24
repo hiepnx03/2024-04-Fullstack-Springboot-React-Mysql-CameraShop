@@ -22,4 +22,12 @@
 8:34 PM thêm sản phẩm có chọn danh mục [10:13 PM thất bại]
 10:13 PM đọc hiểu lại code [10:40 PM thất bại]
 ```
+### Part 4 Day 24-04-24
+```
+5:34 AM sửa code BE thành JPQL [5:50 AM hoàn thiện]
+5:51 AM fix STATUS_STACK_OVERFLOW [6:51 AM hoàn thiện] 
+sử dụng @JsonIdentityInfo,@JsonManagedReference và @JsonBackReference
+6:53 AM thực hiện sửa để hiển thị bên FE [ 8:39 AM xong hiển thị nhưng lỗi chức năng]
+8:40 AM back up bản JPQL và quay về bản Part cũ [8:49 AM back up thành công]
+```
 
