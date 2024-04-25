@@ -30,6 +30,16 @@ sử dụng @JsonIdentityInfo,@JsonManagedReference và @JsonBackReference
 6:53 AM thực hiện sửa để hiển thị bên FE [ 8:39 AM xong hiển thị nhưng lỗi chức năng]
 8:40 AM back up bản JPQL và quay về bản Part 3 [8:49 AM back up thành công]
 8:40 AM back up bản JPQL và quay về bản Part 3 [8:49 AM back up thành công]
-9:00 AM tham khảo code [9h53 đi ngủ]
+9:00 AM tham khảo code [9:53 AM đi ngủ]
+```
+### Part 5 Day 24-04-25
+```
+6:28 AM học lại JPA
+UDEMY Learn how to use Spring Data JPA efficiently in your Spring Boot Applications
+10:45 AM bug chụp màn hình reset máy [10:47 AM reset]
+```
+### Part 6 Day 24-04-25
+```
+10:50 AM tiếp tục JPA [1:45 PM đi ngủ]
 ```
 
