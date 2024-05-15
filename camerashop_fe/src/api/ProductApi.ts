@@ -67,3 +67,13 @@ export async function xoaSanPham(productId: number): Promise<void> {
         throw error;
     }
 }
+
+
+export async function addProduct1(newProduct: ProductModel): Promise<void> {
+    try {
+        await axios.post(`${BASE_URL}/api/products/add-product`, newProduct);
+    } catch (error) {
+        console.error('Error adding product:', error);
+        throw error;
+    }
+}

@@ -1,3 +1,5 @@
+package com.example.laptop_be.config;
+
 import com.example.laptop_be.security.Endpoints;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

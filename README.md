@@ -42,4 +42,9 @@ UDEMY Learn how to use Spring Data JPA efficiently in your Spring Boot Applicati
 ```
 10:50 AM tiếp tục JPA [1:45 PM đi ngủ]
 ```
+### Part 7 Day 24-05-12
+```
+8:00 PM CRUD BE và FE 11:00 PM Hoàn Thành
+``` 
+
 

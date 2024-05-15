@@ -1,6 +1,7 @@
 package com.example.laptop_be.service.product;
 
 import com.example.laptop_be.entity.Product;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface ProductService {
 
     Product addProduct(Product product);
 
+
+    ResponseEntity<?> addProduct1(Product product);
 }

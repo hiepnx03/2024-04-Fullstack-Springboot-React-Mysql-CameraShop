@@ -1,5 +1,6 @@
 package com.example.laptop_be.controller;
 
+import com.example.laptop_be.dao.CategoryRepository;
 import com.example.laptop_be.entity.Product;
 import com.example.laptop_be.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
@@ -39,4 +42,16 @@ public class ProductController {
     }
 
     // Implement other CRUD endpoints as needed
+
+    @PostMapping(path = "/add-product")
+    public ResponseEntity<?> save(@RequestBody Product product) {
+        try {
+            return productService.addProduct1(product);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Lỗi r");
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }
