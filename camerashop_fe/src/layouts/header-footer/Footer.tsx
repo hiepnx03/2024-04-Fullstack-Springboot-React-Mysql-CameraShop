@@ -214,7 +214,7 @@ function Footer() {
                 className='text-center p-3'
                 style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
             >
-                © 2023 Copyright
+                © 2024 Copyright
                 <span className='text-white text-decoration-underline'>
 					{" "}
 				</span>

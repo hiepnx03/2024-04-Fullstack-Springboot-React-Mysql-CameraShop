@@ -18,7 +18,7 @@
     "@types/react": "^18.2.79",
     "@types/react-bootstrap": "^0.32.36",
     "@types/react-dom": "^18.2.25",
-    "axios": "^1.6.8",
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "jwt-decode": "^4.0.0",
     "node-fetch": "^3.3.2",
