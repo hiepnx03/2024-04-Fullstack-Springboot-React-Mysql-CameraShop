@@ -1,5 +1,6 @@
 package com.example.demo.converter;
 
+import com.example.demo.dto.ImageDTO;
 import com.example.demo.dto.ProductDTO;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Image;
@@ -8,6 +9,8 @@ import com.example.demo.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,6 +36,7 @@ public class ProductConverter {
         dto.setImages(product.getImages().stream()
                 .map(ImageConverter::toDTO)
                 .collect(Collectors.toSet()));
+
         return dto;
     }
 
@@ -48,4 +52,18 @@ public class ProductConverter {
         // Không thiết lập categories và images ở đây, sẽ được thiết lập trong service
         return product;
     }
+
+    public Set<Image> toImageEntities(Set<ImageDTO> imageDTOs, Product product) {
+        if (imageDTOs == null || imageDTOs.isEmpty()) {
+            return new HashSet<>();
+        }
+
+        return imageDTOs.stream().map(imageDTO -> {
+            Image image = ImageConverter.toEntity(imageDTO);
+            image.setProduct(product); // Thiết lập liên kết với sản phẩm
+            return image;
+        }).collect(Collectors.toSet());
+    }
+
+
 }

@@ -13,6 +13,8 @@ public class ImageConverter {
         dto.setId(image.getId());
         dto.setUrl(image.getUrl());
         dto.setOrder(image.getImageOrder());
+        // Đảm bảo productId được lấy từ đối tượng Product liên kết
+//        dto.setProductId(image.getProduct() != null ? image.getProduct().getId() : null);
         return dto;
     }
 

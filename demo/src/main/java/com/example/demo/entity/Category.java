@@ -23,4 +23,17 @@ public class Category extends Base<String> {
 
     @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<>(); // Danh sách sản phẩm thuộc danh mục này
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category)) return false;
+        Category category = (Category) o;
+        return id != null && id.equals(category.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

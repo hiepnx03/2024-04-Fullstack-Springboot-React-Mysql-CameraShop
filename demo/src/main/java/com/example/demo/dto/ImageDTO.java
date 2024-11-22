@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ImageDTO {
     private Long id;
-    private String url;   // URL of the image
-    private Long order;
+    private String url;   // URL của hình ảnh
+    private Long order;   // Thứ tự hiển thị
 
-    private Long productId;
+//    private Long productId;
 }
