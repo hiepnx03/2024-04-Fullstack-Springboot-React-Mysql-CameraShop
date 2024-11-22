@@ -12,4 +12,5 @@ public interface ProductService {
     public Optional<ProductDTO> getProductById(Long id);
     public List<ProductDTO> getAllProducts();
     public void deleteProduct(Long id);
+
 }
