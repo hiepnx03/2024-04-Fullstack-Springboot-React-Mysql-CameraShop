@@ -32,13 +32,18 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
-@AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ImageRepository imageRepository;
     private final ProductConverter productConverter;
     private final CategoryRepository categoryRepository;
 
+    public ProductServiceImpl(ProductRepository productRepository, ImageRepository imageRepository, ProductConverter productConverter, CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.imageRepository = imageRepository;
+        this.productConverter = productConverter;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     @Transactional

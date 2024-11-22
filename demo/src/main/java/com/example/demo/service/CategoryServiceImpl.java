@@ -21,14 +21,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final CategoryConverter categoryConverter;
     private final ProductConverter productConverter;
 
-//    public List<CategoryDTO> findAll() {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, CategoryConverter categoryConverter, ProductConverter productConverter) {
+        this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
+        this.categoryConverter = categoryConverter;
+        this.productConverter = productConverter;
+    }
+
+
+    //    public List<CategoryDTO> findAll() {
 //        List<Category> categories = categoryRepository.findAll();
 //        return categories.stream()
 //                .map(categoryConverter::convertToDTO)

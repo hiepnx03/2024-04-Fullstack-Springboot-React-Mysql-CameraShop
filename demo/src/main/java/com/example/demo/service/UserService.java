@@ -9,6 +9,10 @@ import java.util.*;
 
 public interface UserService {
     public void addUser(UserDTO userDTO) ;
-    public void login(LoginDTO loginDTO);
+    public Map<String, String> login(LoginDTO loginDTO);
     public List<UserDTO> getAllUsers() ;
+    public String refreshToken(String refreshToken);
+    public void logout(String username);
+    public UserDTO getUserByUsername(String username);
+    UserDTO getUserById(Long id);
 }

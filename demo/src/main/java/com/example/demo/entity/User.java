@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Data
-public class User extends Base<String>{
+public class User extends Base<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +23,9 @@ public class User extends Base<String>{
 
     @Column(name = "expiry_date")
     private Instant expiryDate;
+
+    @Column(name = "refresh_token", length = 500, unique = true)
+    private String refreshToken;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "user_roles",
