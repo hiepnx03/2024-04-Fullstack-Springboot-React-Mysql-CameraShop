@@ -1,6 +1,8 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,4 +17,11 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT c FROM Category c JOIN FETCH c.products")
     List<Category> findAllCategoriesWithProducts();
 //    Category findByName(String name);
+
+
+    // Tìm kiếm theo tên danh mục (case-insensitive) với Native Query và phân trang
+    @Query(value = "SELECT * FROM category c WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))",
+            countQuery = "SELECT COUNT(*) FROM category c WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))",
+            nativeQuery = true)
+    Page<Category> findByNameContainingIgnoreCaseNative(String name, Pageable pageable);
 }

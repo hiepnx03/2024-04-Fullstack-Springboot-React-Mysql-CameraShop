@@ -12,6 +12,10 @@ import com.example.demo.repository.ImageRepository;
 import com.example.demo.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -126,8 +130,6 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-
-
     // Lấy sản phẩm theo ID
     @Override
     public Optional<ProductDTO> getProductById(Long id) {
@@ -141,6 +143,45 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll().stream()
                 .map(productConverter::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ProductDTO> getAllProductsPaged(int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return productPage.map(productConverter::toDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> searchProductsByName(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productRepository.findByNameContainingIgnoreCase(name, pageable);
+        return productPage.map(productConverter::toDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> filterProductsByPrice(double minPrice, double maxPrice, int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Product> productPage = productRepository.findByPriceBetween(minPrice, maxPrice, pageable);
+        return productPage.map(productConverter::toDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> filterProductsByCategoryNative(Set<Long> categoryIds, int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Product> productPage = productRepository.findByCategoryIds(categoryIds, pageable);
+        return productPage.map(productConverter::toDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> filterProductsByCategoryAndPriceNative(Set<Long> categoryIds, double minPrice, double maxPrice, int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Product> productPage = productRepository.findByCategoryIdsAndPriceBetween(categoryIds, minPrice, maxPrice, pageable);
+        return productPage.map(productConverter::toDTO);
     }
 
     // Xóa sản phẩm theo ID

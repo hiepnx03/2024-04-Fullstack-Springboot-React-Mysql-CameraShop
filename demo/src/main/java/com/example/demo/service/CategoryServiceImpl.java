@@ -10,6 +10,9 @@ import com.example.demo.entity.Product;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +27,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final ProductRepository productRepository;
     private final CategoryConverter categoryConverter;
     private final ProductConverter productConverter;
-
 
 //    public List<CategoryDTO> findAll() {
 //        List<Category> categories = categoryRepository.findAll();
@@ -113,7 +115,6 @@ public class CategoryServiceImpl implements CategoryService {
         // Delete the category if it exists
         categoryRepository.delete(existingCategory);
 
-//
 //        Category category = categoryRepository.findById(id)
 //                .orElseThrow(() -> new RuntimeException("Category không tồn tại"));
 //
@@ -126,6 +127,12 @@ public class CategoryServiceImpl implements CategoryService {
 //
 //        // Sau đó có thể xóa Category
 //        categoryRepository.delete(category);
+    }
+
+    @Override
+    public Page<Category> searchCategories(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return categoryRepository.findByNameContainingIgnoreCaseNative(keyword, pageable);
     }
 
 

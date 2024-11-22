@@ -1,8 +1,10 @@
 package com.example.demo.controller.admin;
 
 import com.example.demo.dto.CategoryDTO;
+import com.example.demo.entity.Category;
 import com.example.demo.service.CategoryService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,5 +44,13 @@ public class CategoryController {
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public Page<Category> searchCategories(
+            @RequestParam String keyword,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return categoryService.searchCategories(keyword, page, size);
     }
 }
