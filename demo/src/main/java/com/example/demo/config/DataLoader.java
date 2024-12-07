@@ -2,9 +2,15 @@ package com.example.demo.config;
 
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
+import com.example.demo.entity.Role;
+import com.example.demo.entity.User;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductRepository;
+import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,14 +23,27 @@ public class DataLoader implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DataLoader(CategoryRepository categoryRepository, ProductRepository productRepository) {
+    public DataLoader(CategoryRepository categoryRepository, ProductRepository productRepository,
+                      RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) {
+        createAdminRoleIfNotExist();
+        createClientRoleIfNotExist();
+
+        createAdminUserIfNotExist();
+        createClientUserIfNotExist();
+
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
@@ -93,7 +112,7 @@ public class DataLoader implements CommandLineRunner {
 
             productRepository.save(product);
         });
-        System.out.println("20 products added successfully!");
+        System.out.println("30 products added successfully!");
     }
 
     private Set<Category> getRandomCategories(List<Category> categories) {
@@ -109,4 +128,90 @@ public class DataLoader implements CommandLineRunner {
 
         return randomCategories;
     }
+
+    // Tạo role ADMIN nếu chưa tồn tại
+    private void createAdminRoleIfNotExist() {
+        Optional<Role> adminRole = roleRepository.findByName("ADMIN");
+        if (adminRole.isEmpty()) {
+            Role role = new Role();
+            role.setName("ADMIN");
+            roleRepository.save(role);
+            System.out.println("Admin role created!");
+        }
+    }
+
+    private void createClientRoleIfNotExist() {
+        Optional<Role> adminRole = roleRepository.findByName("CLIENT");
+        if (adminRole.isEmpty()) {
+            Role role = new Role();
+            role.setName("CLIENT");
+            roleRepository.save(role);
+            System.out.println("Client role created!");
+        }
+    }
+
+    // Tạo user ADMIN nếu chưa tồn tại và gán role ADMIN
+    private void createAdminUserIfNotExist() {
+        Optional<User> adminUser = Optional.ofNullable(userRepository.findByUserName("ADMIN"));
+        if (adminUser.isEmpty()) {
+            // Tạo user ADMIN
+            User user = new User();
+            user.setUserName("ADMIN");
+            user.setPassword(passwordEncoder.encode("ADMIN")); // Mã hóa password
+            user.setStatus(1); // Đặt trạng thái là true (active)
+            user.setEnabled(true);
+            user.setPhone("0123456789");
+            user.setCreatedBy("ADMIN");
+            user.setUpdatedBy("ADMIN");
+            user.setEmail("admin@gmail.com");
+            user.setFirstName("Admin");
+            user.setLastName("Nguyen Van");
+            // Tìm role ADMIN và gán cho user ADMIN
+            Optional<Role> adminRole = roleRepository.findByName("ADMIN");
+            if (adminRole.isPresent()) {
+                user.setRoles(Collections.singletonList(adminRole.get()));
+            } else {
+                // Nếu role ADMIN không tồn tại, tạo mới và gán cho user
+                Role role = new Role();
+                role.setName("ADMIN");
+                roleRepository.save(role);
+                user.setRoles(Collections.singletonList(role));
+            }
+
+            userRepository.save(user); // Lưu user ADMIN vào cơ sở dữ liệu
+            System.out.println("Admin user created successfully!");
+        }
+    }
+
+    // Tạo user ADMIN nếu chưa tồn tại và gán role ADMIN
+    private void createClientUserIfNotExist() {
+        Optional<User> clientUser = Optional.ofNullable(userRepository.findByUserName("CLIENT"));
+        if (clientUser.isEmpty()) {
+            User user = new User();
+            user.setUserName("CLIENT");
+            user.setPassword(passwordEncoder.encode("CLIENT")); // Mã hóa password
+            user.setStatus(1); // Đặt trạng thái là true (active)
+            user.setEnabled(true);
+            user.setPhone("0123456789");
+            user.setCreatedBy("ADMIN");
+            user.setUpdatedBy("ADMIN");
+            user.setEmail("client@gmail.com");
+            user.setFirstName("Client");
+            user.setLastName("Nguyen Van");
+            Optional<Role> clientRole = roleRepository.findByName("CLIENT");
+            if (clientRole.isPresent()) {
+                user.setRoles(Collections.singletonList(clientRole.get()));
+            } else {
+                // Nếu role ADMIN không tồn tại, tạo mới và gán cho user
+                Role role = new Role();
+                role.setName("CLIENT");
+                roleRepository.save(role);
+                user.setRoles(Collections.singletonList(role));
+            }
+
+            userRepository.save(user); // Lưu user ADMIN vào cơ sở dữ liệu
+            System.out.println("Client user created successfully!");
+        }
+    }
+
 }

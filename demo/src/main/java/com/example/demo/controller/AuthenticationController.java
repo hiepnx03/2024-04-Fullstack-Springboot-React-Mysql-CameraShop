@@ -1,19 +1,18 @@
 package com.example.demo.controller;
 
-//import com.example.demo.config.JwtUtil;
+
 import com.example.demo.dto.LoginDTO;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.ResponseObject;
+import com.example.demo.util.JwtUtils;
 import com.example.demo.util.TokenBlacklist;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -24,12 +23,18 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final TokenBlacklist tokenBlacklist;
+    private final JwtUtils jwtUtils;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-        Map<String, String> tokens = userService.login(loginDTO);
-        return ResponseEntity.ok(tokens);
+        try {
+            Map<String, String> tokens = userService.login(loginDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Login successful", tokens));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ResponseObject("failed", e.getMessage(), ""));
+        }
     }
+
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
@@ -48,10 +53,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> processRegister(@RequestBody UserDTO user) {
+    public ResponseEntity<?> processRegister(@RequestBody UserDTO userDTO) {
         try {
-            userService.addUser(user);
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Register successful. Please check your mail to verify!", user));
+            userService.register(userDTO);
+
+            System.out.println(userDTO.getUserName());
+            System.out.println(userDTO.getRoles());
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Register successful. Please check your mail to verify!", userDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ResponseObject("failed", e.getMessage(), ""));
         }

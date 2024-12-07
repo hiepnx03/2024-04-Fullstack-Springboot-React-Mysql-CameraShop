@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,14 +31,19 @@ public class SecurityConfig {
                 .csrf().disable()  // Cấu hình để vô hiệu hóa CSRF
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/admin/products").permitAll()
-                        .requestMatchers("/admin/products/**").permitAll()
+//                        .requestMatchers("/admin/products").permitAll()
+//                        .requestMatchers("/admin/products/**").permitAll()
 
 
-//                        .requestMatchers(HttpMethod.GET, "/products/**").hasAnyAuthority("USER", "ADMIN")  // Cho phép quyền USER và ADMIN xem sản phẩm
-//                        .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority("ADMIN")  // Chỉ ADMIN có thể tạo sản phẩm
-//                        .requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("ADMIN")  // Chỉ ADMIN có thể sửa sản phẩm
-//                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasAuthority("ADMIN")  // Chỉ ADMIN có thể xóa sản phẩm
+                        .requestMatchers(HttpMethod.GET, "/admin/products/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/admin/products/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/admin/products/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/products/**").hasAuthority("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/admin/categories/**").hasAnyAuthority("CLIENT", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/categories/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/admin/categories/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/categories/**").hasAuthority("ADMIN")
 
                         .anyRequest().permitAll() // Các yêu cầu khác phải xác thực
                 )
@@ -50,6 +56,9 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
