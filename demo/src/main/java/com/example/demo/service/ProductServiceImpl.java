@@ -163,10 +163,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> filterProductsByPrice(double minPrice, double maxPrice, int page, int size, String sortBy, String direction) {
+    public Page<ProductDTO> filterProductsBySellPrice(double minSellPrice, double maxSellPrice, int page, int size, String sortBy, String direction) {
         Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Product> productPage = productRepository.findByPriceBetween(minPrice, maxPrice, pageable);
+        Page<Product> productPage = productRepository.findBySellPriceBetween(minSellPrice, maxSellPrice, pageable);
         return productPage.map(productConverter::toDTO);
     }
 
@@ -179,18 +179,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> filterProductsByCategoryAndPriceNative(Set<Long> categoryIds, double minPrice, double maxPrice, int page, int size, String sortBy, String direction) {
+    public Page<ProductDTO> filterProductsByCategoryAndPriceNative(Set<Long> categoryIds, double minSellPrice, double maxSellPrice, int page, int size, String sortBy, String direction) {
         Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Product> productPage = productRepository.findByCategoryIdsAndPriceBetween(categoryIds, minPrice, maxPrice, pageable);
+        Page<Product> productPage = productRepository.findByCategoryIdsAndSellPriceBetween(categoryIds, minSellPrice, maxSellPrice, pageable);
         return productPage.map(productConverter::toDTO);
     }
 
-    // Xóa sản phẩm theo ID
     @Override
     public boolean deleteProduct(Long id) {
-        productRepository.deleteById(id);
-        return false;
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return true;  // Indicate the product was deleted successfully
+        }
+        return false;  // Indicate the product was not found
     }
+
 
 }

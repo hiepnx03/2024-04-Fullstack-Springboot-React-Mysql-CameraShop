@@ -115,25 +115,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long id) {
-        // Check if the category exists by ID
-        Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found: " + id));
-
-        // Delete the category if it exists
-        categoryRepository.delete(existingCategory);
-
-//        Category category = categoryRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Category không tồn tại"));
-//
-//        // Cập nhật các Product liên kết với Category này bằng cách đặt status_category thành false
-//        List<Product> productsInCategory = productRepository.findByCategory(id);
-//        for (Product product : productsInCategory) {
-//            product.setStatusCategory(false);  // Đánh dấu sản phẩm không còn thuộc category này
-//            productRepository.save(product);  // Lưu lại product đã cập nhật
-//        }
-//
-//        // Sau đó có thể xóa Category
-//        categoryRepository.delete(category);
+        // Xóa sản phẩm liên kết với danh mục
+        categoryRepository.deleteCategoryAndAssociationsById(id);
     }
 
     @Override

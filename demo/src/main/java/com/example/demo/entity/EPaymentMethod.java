@@ -1,15 +1,18 @@
 package com.example.demo.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum EPaymentMethod {
     COD("COD"),
-    PAYPAL("PAYPAL");
+    PAYPAL("PAYPAL"),
+    VNPAY("VNPAY"),
+    ZALOPAY("ZALOPAY"),
+    MOMO("MOMO");
+
     private final String name;
 
-    EPaymentMethod(String s) {
-        name = s;
-    }
-
-    public String getName() {
-        return name;
+    EPaymentMethod(String name) {
+        this.name = name;
     }
 }

@@ -2,7 +2,9 @@ package com.example.demo.converter;
 
 import com.example.demo.dto.ImageDTO;
 import com.example.demo.entity.Image;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ImageConverter {
 
     public static ImageDTO toDTO(Image image) {

@@ -17,5 +17,8 @@ public interface UserService {
     public UserDTO getUserByUsername(String username);
     UserDTO getUserById(Long id);
     UserResponse add(UserDTO userDTO);
+    public void forgotPassword(String email, String siteURL);
+    void resetPassword(String verificationCode, String password);
+    Boolean verify(String verificationCode);
     Page<UserResponse> getAll(int page, int size);
 }

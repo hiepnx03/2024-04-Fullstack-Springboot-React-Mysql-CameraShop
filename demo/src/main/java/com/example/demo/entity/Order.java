@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,16 +16,18 @@ import java.util.List;
 @Entity
 @Table(name = "bill")
 public class Order extends Base<String> {
-
     private Long shippingCost;
     private Long total;
     private String description;
     private String address;
     private String phone;
     private String fullName;
+
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private Date createdDate;
+
     @Column(name = "status")
     private Integer status;
 
@@ -51,10 +54,10 @@ public class Order extends Base<String> {
     @JoinColumn(name = "payment_id", referencedColumnName = "id")
     private Payment payment;
 
-    @PrePersist
-    private void onCreate() {
-        createdDate = new Date();
-    }
+//    @PrePersist
+//    private void onCreate() {
+//        createdDate = new Date();
+//    }
 
 //
 //    @ManyToOne(targetEntity = ShippingStatus.class)

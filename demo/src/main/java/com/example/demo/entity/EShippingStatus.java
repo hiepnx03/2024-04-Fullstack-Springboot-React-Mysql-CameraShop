@@ -1,5 +1,8 @@
 package com.example.demo.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum EShippingStatus {
 	VERIFIED("VERIFIED"),
 	UNVERIFIED("UNVERIFIED"),
@@ -10,11 +13,7 @@ public enum EShippingStatus {
 
 	private final String name;
 
-	EShippingStatus(String s) {
-		name = s;
-	}
-
-	public String getName() {
-		return name;
+	EShippingStatus(String name) {
+		this.name = name;
 	}
 }

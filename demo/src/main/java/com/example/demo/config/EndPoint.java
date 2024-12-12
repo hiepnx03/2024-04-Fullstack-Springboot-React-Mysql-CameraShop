@@ -30,6 +30,13 @@ public class EndPoint {
             "/admin/categories/**"
     };
 
+    public static final String[] MANAGER_ENDPOINT = {
+            "/admin/**",
+            "/**",
+            "/admin/products/**",
+            "/admin/categories/**"
+    };
+
 
 //    public static final String PRODUCT_API_GET = "/admin/products/**";
 //    public static final String PRODUCT_API_POST = "/admin/products/**";

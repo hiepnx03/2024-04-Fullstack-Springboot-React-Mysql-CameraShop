@@ -10,8 +10,14 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.util.JwtUtils;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import net.bytebuddy.utility.RandomString;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,11 +25,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Value("${shop.app.jwtRefreshExpirationMs}")
+    private Long refreshTokenDurationMs;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -31,14 +41,16 @@ public class UserServiceImpl implements UserService {
     private final UserConverter userConverter;
     private final UserDetailsService userDetailsService;
     private final JwtUtils jwtUtils;
+    private final JavaMailSender javaMailSender;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserConverter userConverter, UserDetailsService userDetailsService, JwtUtils jwtUtils) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserConverter userConverter, UserDetailsService userDetailsService, JwtUtils jwtUtils, JavaMailSender javaMailSender) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userConverter = userConverter;
         this.userDetailsService = userDetailsService;
         this.jwtUtils = jwtUtils;
+        this.javaMailSender = javaMailSender;
     }
 
     @Override
@@ -70,12 +82,22 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public Page<UserResponse> getAll(int page, int size) {
         return null;
     }
 
+    @Override
+    public Boolean verify(String verificationCode) {
+        User user = userRepository.findByVerificationCode(verificationCode);
+        if (user == null || user.getEnabled()) {
+            return false;
+        }
+        user.setEnabled(true);
+        user.setVerificationCode(null);
+        userRepository.save(user);
+        return true;
+    }
 
     @Override
     public void register(UserDTO userDTO) {
@@ -106,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, String> login(LoginDTO loginDTO) {
-        User user = userRepository.findByUserName(loginDTO.getUsername());
+        User user = userRepository.findByUserName(loginDTO.getUserName());
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
@@ -193,6 +215,65 @@ public class UserServiceImpl implements UserService {
         return userDTO;
     }
 
+    @Override
+    public void forgotPassword(String email, String siteURL) {
+        User user = userRepository.findByEmailAndStatus(email, 1);
+        if (user == null) {
+            throw new RuntimeException("Email does not exists!");
+        }
+        String randomCode = RandomString.make(64);
+        user.setVerificationCode(randomCode);
+        userRepository.save(user);
+        sendMailForgotPassword(user, siteURL);
+    }
+
+    @Override
+    public void resetPassword(String verificationCode, String password) {
+        User user = userRepository.findByVerificationCode(verificationCode);
+        if (user == null) throw new RuntimeException("Account does not exist!");
+        user.setPassword(passwordEncoder(password));
+        System.out.println(user.getPassword());
+        user.setVerificationCode(null);
+        userRepository.save(user);
+    }
+
+    private String passwordEncoder(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+
+    private void sendMailForgotPassword(User user, String siteURL) {
+        try {
+            String toAddress = user.getEmail();
+            System.out.println("Gửi tới: " + toAddress);
+            String fromAddress = "testheva@gmail.com";
+            String senderName = "CAMERA SHOP";
+            String subject = "Reset your password.";
+            String content = "Dear [[name]],<br>"
+                    + "Please click the link below to reset your password:<br>"
+                    + "<h3><a href=\"[[URL]]\" target=\"_self\">RESET NOW</a></h3>"
+                    + "Thank you,<br>"
+                    + "CAMERA SHOP.";
+
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", user.getLastName() + " " + user.getFirstName());
+            String verifyURL = siteURL + "/auth/reset?code=" + user.getVerificationCode();
+
+            content = content.replace("[[URL]]", verifyURL);
+
+            helper.setText(content, true);
+            javaMailSender.send(message);
+        } catch (UnsupportedEncodingException | MessagingException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @Override
     public String refreshToken(String refreshToken) {

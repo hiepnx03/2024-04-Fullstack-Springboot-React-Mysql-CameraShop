@@ -1,81 +1,116 @@
 package com.example.demo.service;
 
-import com.example.demo.config.MoMoConfig;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.dto.response.MomoCreatePaymentResponse;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MoMoService {
+@Service
+public class MomoService {
 
-    private static final String PAYMENT_URL = MoMoConfig.PaymentUrl;
+    @Value("${momo.api.url}")
+    private String momoApiUrl;
 
-    public String createPaymentRequest(double amount, String orderId, String orderInfo) {
-        RestTemplate restTemplate = new RestTemplate();
+    @Value("${momo.secret.key}")
+    private String secretKey;
 
-        // Thông tin yêu cầu thanh toán
-        Map<String, String> requestParams = new HashMap<>();
-        requestParams.put("partnerCode", MoMoConfig.PartnerCode);
-        requestParams.put("accessKey", MoMoConfig.AccessKey);
-        requestParams.put("requestId", orderId);
-        requestParams.put("amount", String.valueOf(amount));
-        requestParams.put("orderInfo", orderInfo);
-        requestParams.put("returnUrl", MoMoConfig.ReturnUrl);
-        requestParams.put("ipnUrl", MoMoConfig.IpnUrl);
-        requestParams.put("notifyUrl", MoMoConfig.IpnUrl);
+    @Value("${momo.access.key}")
+    private String accessKey;
 
-        // Xử lý mã hóa và tạo chữ ký (Signature) theo yêu cầu MoMo API
-        String signature = generateSignature(requestParams);
-        requestParams.put("signature", signature);
+    @Value("${momo.partner.code}")
+    private String partnerCode;
 
-        // Tạo và gửi yêu cầu POST tới MoMo API
-        String url = PAYMENT_URL;
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestParams);
+    @Value("${momo.return.url}")
+    private String returnUrl;
 
-        // Gửi yêu cầu và nhận phản hồi
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+    @Value("${momo.notify.url}")
+    private String notifyUrl;
 
-        // Xử lý kết quả từ MoMo API
-        return response.getBody(); // Dữ liệu trả về từ MoMo (dạng JSON hoặc URL thanh toán)
+    @Value("${momo.request.type}")
+    private String requestType;
+
+    private final RestTemplate restTemplate;
+
+    public MomoService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
-    // Hàm tạo chữ ký (signature)
-    private String generateSignature(Map<String, String> params) {
-        // Các bước tạo chữ ký tùy thuộc vào yêu cầu của MoMo (thông thường sẽ mã hóa các thông số theo thứ tự và sử dụng key bí mật để tạo chữ ký)
-        StringBuilder signatureBuilder = new StringBuilder();
-
-        signatureBuilder.append("partnerCode=").append(MoMoConfig.PartnerCode);
-        signatureBuilder.append("&accessKey=").append(MoMoConfig.AccessKey);
-        signatureBuilder.append("&requestId=").append(params.get("requestId"));
-        signatureBuilder.append("&amount=").append(params.get("amount"));
-        signatureBuilder.append("&orderInfo=").append(params.get("orderInfo"));
-        signatureBuilder.append("&returnUrl=").append(MoMoConfig.ReturnUrl);
-        signatureBuilder.append("&ipnUrl=").append(MoMoConfig.IpnUrl);
-
-        // Dùng SecretKey để mã hóa tạo chữ ký
-        signatureBuilder.append("&secretKey=").append(MoMoConfig.SecretKey);
-
-        // Trả về chữ ký đã được mã hóa (có thể dùng SHA256, HMAC hoặc phương thức khác tuỳ thuộc vào yêu cầu của MoMo)
-        return sha256(signatureBuilder.toString()); // Ví dụ, hàm sha256 có thể được sử dụng để tạo chữ ký
-    }
-
-    // Hàm mã hóa SHA256
-    private String sha256(String base) {
+    public MomoCreatePaymentResponse generateMomoPayPaymentUrl(String orderId, Long amount, String orderInfo) {
         try {
-            java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(base.getBytes());
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                hexString.append(Integer.toHexString(0xFF & b));
+            // Dữ liệu yêu cầu gửi tới MoMo API
+            Map<String, String> data = new HashMap<>();
+            data.put("partnerCode", partnerCode);
+            data.put("accessKey", accessKey);
+            data.put("requestId", orderId);
+            data.put("amount", String.valueOf(amount));
+            data.put("orderId", orderId);
+            data.put("orderInfo", orderInfo);
+            data.put("returnUrl", returnUrl);
+            data.put("notifyUrl", notifyUrl);
+            data.put("requestType", requestType);
+            data.put("extraData", "");
+
+            // Tính toán chữ ký (signature)
+            String rawData = buildRawData(data);
+            String signature = generateSignature(rawData);
+
+            // Thêm chữ ký vào dữ liệu yêu cầu
+            data.put("signature", signature);
+
+            // Gửi yêu cầu POST tới MoMo API để tạo URL thanh toán
+            Map<String, String> response = restTemplate.postForObject(momoApiUrl, data, Map.class);
+
+            // Xử lý phản hồi từ MoMo API và trả về URL thanh toán
+            if ("00".equals(response.get("errorCode"))) {
+                return new MomoCreatePaymentResponse(response.get("payUrl"));
+            } else {
+                throw new RuntimeException("Error from MoMo: " + response.get("message"));
             }
-            return hexString.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error generating MoMo payment URL", e);
         }
-        return null;
+    }
+
+    // Xây dựng dữ liệu thô cho chữ ký
+    private String buildRawData(Map<String, String> data) {
+        return "partnerCode=" + data.get("partnerCode")
+                + "&accessKey=" + data.get("accessKey")
+                + "&requestId=" + data.get("requestId")
+                + "&amount=" + data.get("amount")
+                + "&orderId=" + data.get("orderId")
+                + "&orderInfo=" + data.get("orderInfo")
+                + "&returnUrl=" + data.get("returnUrl")
+                + "&notifyUrl=" + data.get("notifyUrl")
+                + "&extraData=" + data.get("extraData");
+    }
+
+    // Tính toán chữ ký HMAC SHA256
+    private String generateSignature(String rawData) {
+        return computeHmacSha256(rawData, secretKey);
+    }
+
+    // Hàm tính toán chữ ký HMAC SHA256
+    private String computeHmacSha256(String data, String secretKey) {
+        try {
+            javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
+            javax.crypto.spec.SecretKeySpec secretKeySpec = new javax.crypto.spec.SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
+            mac.init(secretKeySpec);
+            byte[] hashBytes = mac.doFinal(data.getBytes());
+            return bytesToHex(hashBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Error computing HMAC", e);
+        }
+    }
+
+    // Chuyển byte[] thành chuỗi hex
+    private String bytesToHex(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : bytes) {
+            hexString.append(String.format("%02x", b));
+        }
+        return hexString.toString();
     }
 }

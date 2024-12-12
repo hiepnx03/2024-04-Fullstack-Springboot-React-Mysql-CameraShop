@@ -14,9 +14,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@AllArgsConstructor
 public class UserConverter {
     private final ModelMapper modelMapper;
+
+    public UserConverter(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     public UserDTO convertToDto(User entity) {
 //        if (entity == null) {

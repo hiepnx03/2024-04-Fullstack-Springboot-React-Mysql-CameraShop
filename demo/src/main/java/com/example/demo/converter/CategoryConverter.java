@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Component
 public class CategoryConverter {
 
-    // Convert Category entity to CategoryDTO
     public CategoryDTO convertToDTO(Category category) {
         if (category == null) {
             return null;

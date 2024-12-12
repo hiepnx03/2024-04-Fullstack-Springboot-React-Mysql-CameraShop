@@ -8,11 +8,13 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
 @Component
 public class RoleConverter {
     private final ModelMapper modelMapper;
 
+    public RoleConverter(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     public RoleDTO convertToDto(Role entity) {
         return modelMapper.map(entity, RoleDTO.class);

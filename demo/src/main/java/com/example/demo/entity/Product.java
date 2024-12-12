@@ -17,9 +17,15 @@ public class Product extends Base<String>{
 
     private String name;
     private String description;
-    private Double price;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    private Double importPrice;
+    private Double listPrice;
+    private Double sellPrice;
+
+    private Double quantity;
+    private Double soldQuantity;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "product_category", // Tên bảng trung gian
             joinColumns = @JoinColumn(name = "product_id"), // Khóa ngoại cho bảng sản phẩm
@@ -45,5 +51,6 @@ public class Product extends Base<String>{
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
 }
 

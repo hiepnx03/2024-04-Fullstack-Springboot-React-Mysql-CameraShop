@@ -14,10 +14,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Component
 public class ProductConverter {
     private final CategoryRepository categoryRepository;
+
+    public ProductConverter(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     public ProductDTO toDTO(Product product) {
         if (product == null) {
@@ -27,7 +30,13 @@ public class ProductConverter {
         dto.setId(product.getId());
         dto.setName(product.getName());
         dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
+
+
+        dto.setImportPrice(product.getImportPrice());
+        dto.setListPrice(product.getListPrice());
+        dto.setSellPrice(product.getSellPrice());
+        dto.setQuantity(product.getQuantity());
+        dto.setSoldQuantity(product.getSoldQuantity());
 
         dto.setCategoryIds(product.getCategories().stream()
                 .map(Category::getId)
@@ -48,7 +57,12 @@ public class ProductConverter {
         product.setId(dto.getId());
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
-        product.setPrice(dto.getPrice());
+        product.setImportPrice(dto.getImportPrice());
+        product.setListPrice(dto.getListPrice());
+        product.setSellPrice(dto.getSellPrice());
+        product.setQuantity(dto.getQuantity());
+        product.setSoldQuantity(dto.getSoldQuantity());
+
         // Không thiết lập categories và images ở đây, sẽ được thiết lập trong service
         return product;
     }

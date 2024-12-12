@@ -33,6 +33,16 @@ public class ProductController {
 
 
     // Lấy sản phẩm theo ID
+    @GetMapping("/paged")
+    public Page<ProductDTO> getAllProductsPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return productService.getAllProductsPaged(page, size, sortBy, direction);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProductById(@PathVariable Long id) {
         try {
@@ -75,16 +85,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/paged")
-    public Page<ProductDTO> getAllProductsPaged(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction
-    ) {
-        return productService.getAllProductsPaged(page, size, sortBy, direction);
-    }
-
     @GetMapping("/search")
     public Page<ProductDTO> searchProductsByName(
             @RequestParam String name,
@@ -103,7 +103,7 @@ public class ProductController {
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
     ) {
-        return productService.filterProductsByPrice(minPrice, maxPrice, page, size, sortBy, direction);
+        return productService.filterProductsBySellPrice(minPrice, maxPrice, page, size, sortBy, direction);
     }
 
     @GetMapping("/filter-by-category-native")

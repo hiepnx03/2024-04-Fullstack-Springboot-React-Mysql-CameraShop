@@ -1,9 +1,6 @@
 package com.example.demo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -15,8 +12,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @MappedSuperclass
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -40,4 +36,5 @@ public abstract class Base<U> {
 	@UpdateTimestamp
 	@Column(name = "update_at")
 	protected Date updatedAt;
+
 }

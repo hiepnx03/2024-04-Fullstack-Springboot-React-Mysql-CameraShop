@@ -34,7 +34,7 @@ public class AddNewProductTest {
         Product product = new Product();
         product.setName("Camera");
         product.setDescription("A high-end camera");
-        product.setPrice(2000.0);
+        product.setSellPrice(2000.0);
         product.setCategories(Set.of(savedCategory)); // Liên kết danh mục
 
         // Lưu sản phẩm vào cơ sở dữ liệu
@@ -44,7 +44,7 @@ public class AddNewProductTest {
         assertThat(savedProduct).isNotNull(); // Đảm bảo không null
         assertThat(savedProduct.getId()).isNotNull(); // Đảm bảo ID được tự động sinh
         assertThat(savedProduct.getName()).isEqualTo("Laptop"); // Kiểm tra tên sản phẩm
-        assertThat(savedProduct.getPrice()).isEqualTo(2000.0); // Kiểm tra giá sản phẩm
+        assertThat(savedProduct.getSellPrice()).isEqualTo(2000.0); // Kiểm tra giá sản phẩm
         assertThat(savedProduct.getCategories()).hasSize(1); // Kiểm tra số lượng danh mục
         assertThat(savedProduct.getCategories())
                 .extracting("name")

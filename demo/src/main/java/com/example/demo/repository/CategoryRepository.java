@@ -4,8 +4,11 @@ import com.example.demo.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,4 +27,13 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             countQuery = "SELECT COUNT(*) FROM category c WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))",
             nativeQuery = true)
     Page<Category> findByNameContainingIgnoreCaseNative(String name, Pageable pageable);
+
+
+
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Category m WHERE m.id = :id")
+    void deleteCategoryAndAssociationsById(@Param("id") Long id);
+
 }

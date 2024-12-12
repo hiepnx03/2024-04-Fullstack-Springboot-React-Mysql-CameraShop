@@ -21,7 +21,7 @@ public class Category extends Base<String> {
     private boolean editable;
     private boolean visible;
 
-    @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "categories",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Product> products = new HashSet<>(); // Danh sách sản phẩm thuộc danh mục này
 
     @Override

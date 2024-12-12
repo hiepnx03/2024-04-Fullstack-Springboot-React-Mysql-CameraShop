@@ -1,16 +1,14 @@
 class ImageModel {
-   idImage: number;
-   nameImage?: string;
-   thumbnail?: boolean;
-   urlImage?: string;
-   dataImage?: string;
+   idImage: number;          // ID của hình ảnh
+   url: string;              // Đường dẫn của hình ảnh
+   imageOrder: number;       // Thứ tự của hình ảnh trong bộ sưu tập
+   productId: number;        // ID sản phẩm mà hình ảnh này thuộc về
 
-   constructor(idImage: number, nameImage: string, thumbnail: boolean, urlImage: string, dataImage: string) {
+   constructor(idImage: number, url: string, imageOrder: number, productId: number) {
       this.idImage = idImage;
-      this.nameImage = nameImage;
-      this.thumbnail = thumbnail;
-      this.urlImage = urlImage;
-      this.dataImage = dataImage;
+      this.url = url;
+      this.imageOrder = imageOrder;
+      this.productId = productId;
    }
 }
 

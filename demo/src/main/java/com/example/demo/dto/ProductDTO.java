@@ -15,10 +15,13 @@ public class ProductDTO {
     private Long id;
     private String name;
     private String description;
-    private Double price;
 
-//    private Set<Long> categories = new HashSet<>();
-//    private Set<ImageDTO> images = new HashSet<>();
+    private Double importPrice;
+    private Double listPrice;
+    private Double sellPrice;
+
+    private Double quantity;
+    private Double soldQuantity;
 
 
     private Set<Long> categoryIds; // Danh sách ID của các danh mục

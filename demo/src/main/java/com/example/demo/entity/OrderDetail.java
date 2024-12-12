@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,20 +18,24 @@ import org.hibernate.annotations.NotFoundAction;
 @Entity
 @Table(name = "order_detail")
 public class OrderDetail {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private Integer quantity;
-	private Integer discount;
-	private Long price;
-	@ManyToOne(targetEntity = Product.class)
-	@JoinColumn(name = "product_id", nullable = false)
-	@JsonIgnore
-	private Product product;
+    @NotNull(message = "Quantity is required")
+    private Integer quantity;
+    private Integer discount;
 
-	@NotFound(action = NotFoundAction.IGNORE)
-	@ManyToOne(targetEntity = Order.class)
-	@JoinColumn(name = "bill_id", nullable = false)
-	private Order bill;
+    @NotNull(message = "Price is required")
+    private Long price;
+
+    @ManyToOne(targetEntity = Product.class)
+    @JoinColumn(name = "product_id", nullable = false)
+    @JsonIgnore
+    private Product product;
+
+    @NotFound(action = NotFoundAction.IGNORE)
+    @ManyToOne(targetEntity = Order.class)
+    @JoinColumn(name = "bill_id", nullable = false)
+    private Order bill;
 }

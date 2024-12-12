@@ -89,8 +89,8 @@ public class CategoryController {
     public ResponseEntity<ResponseObject> deleteCategory(@PathVariable Long id) {
         try {
             categoryService.delete(id);
-            ResponseObject responseObject = new ResponseObject("ok", "Category deleted successfully", null);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responseObject);
+            ResponseObject responseObject = new ResponseObject("ok", "Category deleted successfully: ", id);
+            return ResponseEntity.status(HttpStatus.OK).body(responseObject);
         } catch (EntityNotFoundException ex) {
             ResponseObject errorResponse = new ResponseObject("error", ex.getMessage(), null);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
