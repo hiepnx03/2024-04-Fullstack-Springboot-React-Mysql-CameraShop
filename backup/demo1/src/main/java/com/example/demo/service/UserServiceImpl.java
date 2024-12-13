@@ -3,24 +3,26 @@ package com.example.demo.service;
 import com.example.demo.converter.UserConverter;
 import com.example.demo.dto.LoginDTO;
 import com.example.demo.dto.UserDTO;
-import com.example.demo.dto.response.UserResponse;
 import com.example.demo.entity.ERole;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.util.JwtUtils;
-import net.bytebuddy.utility.RandomString;
-import org.springframework.data.domain.Page;
-import org.springframework.security.authentication.BadCredentialsException;
+import com.example.demo.util.JwtUtil;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Set.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,61 +32,31 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserConverter userConverter;
     private final UserDetailsService userDetailsService;
-    private final JwtUtils jwtUtils;
+    private final JwtUtil jwtUtil;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserConverter userConverter, UserDetailsService userDetailsService, JwtUtils jwtUtils) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserConverter userConverter, UserDetailsService userDetailsService, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userConverter = userConverter;
         this.userDetailsService = userDetailsService;
-        this.jwtUtils = jwtUtils;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
-    public UserResponse add(UserDTO userDTO) {
-        if (userRepository.findByUserName(userDTO.getUserName()) != null) {
+    public void addUser(UserDTO userDTO) {
+        // Check if the username already exists
+        if (userRepository.findByUsername(userDTO.getUsername()) != null) {
             throw new RuntimeException("Username already exists!");
         }
 
-        if (userRepository.findByEmail(userDTO.getEmail()) != null) {
-            throw new RuntimeException("Email already exists!");
-        }
-
-        List<Role> roles = new ArrayList<>();
-        // Duyệt qua danh sách các tên role và tìm kiếm các role trong cơ sở dữ liệu
-        userDTO.getRoles().forEach(roleName -> {
-            Role foundRole = roleRepository.findByName(roleName)
-                    .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
-            roles.add(foundRole);
-        });
-
-        User user = userConverter.convertToEntity(userDTO);
-        user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode("123456"));  // Mật khẩu mặc định
-        user.setStatus(1);
-        user.setUserName(UUID.randomUUID().toString());
-
-        User userAdded = userRepository.save(user);
-        return userConverter.convertToResponse((Page<User>) userAdded);
-    }
-
-
-
-    @Override
-    public Page<UserResponse> getAll(int page, int size) {
-        return null;
-    }
-
-
-    @Override
-    public void register(UserDTO userDTO) {
-        if (userRepository.findByUserName(userDTO.getUserName()) != null) {
-            throw new RuntimeException("Username already exists!");
-        }
-
+        // Encode the password
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        // Convert DTO to entity
         User user = userConverter.convertToEntity(userDTO);
+
+        // Get or create the CLIENT role
         Role clientRole = roleRepository.findByName(ERole.CLIENT.name())
                 .orElseGet(() -> {
                     Role newRole = new Role();
@@ -96,34 +68,52 @@ public class UserServiceImpl implements UserService {
 
         user.setRoles(List.of(clientRole));
 
-        user.setStatus(1);
-        userDTO.setUserName(user.getUserName());
 
+        // Set additional user attributes
+        user.setStatus(true);
+        user.setUsername(userDTO.getUsername());
+
+        // Save the user
         userRepository.save(user);
+
         System.out.println("User created successfully with default CLIENT role.");
     }
 
 
     @Override
     public Map<String, String> login(LoginDTO loginDTO) {
-        User user = userRepository.findByUserName(loginDTO.getUsername());
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+        // Validate user credentials
+        User user = userRepository.findByUsername(loginDTO.getUsername());
+        if (user == null || !passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid username or password");
         }
-        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Invalid username or password");
-        }
-        List<String> roleName = user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toList());
-        String accessToken = jwtUtils.generateToken(user.getUserName(), roleName);
-        return Map.of("access_token", accessToken);
+
+        // Generate only the access token (without roles)
+        var userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+
+        // Generate tokens
+        String accessToken = jwtUtil.generateToken(userDetails, null); // No roles passed
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
+
+        // Set refresh token and expiry date in the database
+        user.setRefreshToken(refreshToken);
+
+        // Set the expiry date to 7 days from now
+        user.setExpiryDate(Instant.now().plus(7, ChronoUnit.DAYS));
+        userRepository.save(user);
+
+        // Return both tokens
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("accessToken", accessToken);
+        tokens.put("refreshToken", refreshToken);
+
+        return tokens;
     }
 
 
     @Override
     public void logout(String username) {
-        User user = userRepository.findByUserName(username);
+        User user = userRepository.findByUsername(username);
         if (user != null) {
             user.setRefreshToken(null);
             userRepository.save(user);
@@ -138,8 +128,9 @@ public class UserServiceImpl implements UserService {
 
         for (User user : users) {
             UserDTO userDTO = new UserDTO();
-            userDTO.setUserName(user.getUserName());
-//            userDTO.setPassword(user.getPassword());
+            userDTO.setUsername(user.getUsername());
+            userDTO.setPassword(user.getPassword());
+
             // Map roles to a Set of role IDs
 //            List<Long> roleIds = user.getRoles().stream()
 //                    .map(Role::getId) // Extract the role ID
@@ -159,15 +150,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserByUsername(String username) {
-        User user = userRepository.findByUserName(username);
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new RuntimeException("User not found with username: " + username);
         }
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setUserName(user.getUserName());
-
+        userDTO.setUsername(user.getUsername());
         userDTO.setPassword(user.getPassword());
+
+        // Map roles to a Set of role IDs
+//        List<Long> roleIds = user.getRoles().stream()
+//                .map(Role::getId)
+//                .collect(Collectors.toList());
+//        userDTO.setRoles(roleIds);
 
         List<String> roleName = user.getRoles().stream()
                 .map(Role::getName)
@@ -183,9 +179,14 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setUserName(user.getUserName());
-
+        userDTO.setUsername(user.getUsername());
         userDTO.setPassword(user.getPassword());
+
+        // Map roles to a Set of role IDs
+//        List<Long> roleIds = user.getRoles().stream()
+//                .map(Role::getId)
+//                .collect(Collectors.toList());
+//        userDTO.setRoles(roleIds);
         List<String> roleName = user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
@@ -202,16 +203,16 @@ public class UserServiceImpl implements UserService {
         }
 
         // Extract username from the refresh token
-        String username = jwtUtils.extractUsername(refreshToken);
+        String username = jwtUtil.extractUsername(refreshToken);
 
         // Find user by username
-        User user = userRepository.findByUserName(username);
+        User user = userRepository.findByUsername(username);
         if (user == null || !refreshToken.equals(user.getRefreshToken())) {
             throw new IllegalArgumentException("Invalid refresh token");
         }
 
         // Check if the refresh token is expired
-        if (jwtUtils.isTokenExpired(refreshToken)) {
+        if (jwtUtil.isTokenExpired(refreshToken)) {
             throw new IllegalArgumentException("Refresh token has expired");
         }
 
@@ -221,9 +222,7 @@ public class UserServiceImpl implements UserService {
                 .map(Role::getName)
                 .toList();
 
-        // Trả về token mới
-        return jwtUtils.generateToken(username, roles);
+        return jwtUtil.generateToken(userDetails, roles);
     }
-
 
 }

@@ -14,36 +14,40 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order")
-    private int idOrder;
+    private int idOrder; // Mã đơn hàng
     @Column(name = "date_created")
-    private Date dateCreated;
+    private Date dateCreated; // Ngày tạo giỏ hàng
     @Column(name = "delivery_address")
-    private String deliveryAddress;
+    private String deliveryAddress; // Địa chỉ giao hàng
     @Column(name = "phone_number")
-    private String phoneNumber;
+    private String phoneNumber; // Số điện thoại (vì có thể tuỳ chỉnh)
     @Column(name = "full_name")
-    private String fullName;
+    private String fullName; // Họ và tên của khách hàng (tuỳ chỉnh)
     @Column(name = "total_price_product")
-    private double totalPriceProduct;
+    private double totalPriceProduct; // Tổng tiền sản phẩm
     @Column(name = "fee_delivery")
-    private double feeDelivery;
+    private double feeDelivery; // Chi phí giao hàng
     @Column(name = "fee_payment")
-    private double feePayment;
+    private double feePayment; // Chi phí thanh toán
     @Column(name = "total_price")
-    private double totalPrice;
+    private double totalPrice; // Tổng tiền
     @Column(name = "status")
-    private String status;
+    private String status; // Trạng thái của đơn hàng
     @Column(name = "note")
-    private String note;
+    private String note; // Ghi chú
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderDetail> listOrderDetails;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private List<OrderDetail> listOrderDetails; // Danh sách chi tiết đơn hàng
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_user", nullable = false)
-    private User user;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private User user; // Người dùng
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_payment")
-    private Payment payment;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private Payment payment; // Hình thức thanh toán
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_delivery")
-    private Delivery delivery;
+    private Delivery delivery; // Hình thức giao hàng
 }

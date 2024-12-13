@@ -18,18 +18,11 @@ public class User extends Base<String> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
-    private String userName;
+    private String username;
+
     private String password;
-    private String firstName;
-    private String lastName;
 
-
-    private String phone;
-
-    private Boolean enabled;
-    @Column(columnDefinition = "integer default 1")
-    private Integer status;
+    private boolean status;
 
     @Column(name = "expiry_date")
     private Instant expiryDate;

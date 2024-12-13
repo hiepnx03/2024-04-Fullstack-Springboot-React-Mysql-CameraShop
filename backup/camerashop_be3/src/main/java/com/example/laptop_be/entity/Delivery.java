@@ -12,14 +12,13 @@ public class Delivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_delivery")
-    private int idDelivery; // Mã giao hàng
+    private int idDelivery;
     @Column(name = "name_delivery")
-    private String nameDelivery; // Tên giao hàng
+    private String nameDelivery;
     @Column(name = "description")
-    private String description; // Mô tả
+    private String description;
     @Column(name = "fee_delivery")
-    private double feeDelivery; // Chi phí giao hàng
-
-    @OneToMany(mappedBy = "delivery", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<Order> listOrders; // Danh sách đơn hàng
+    private double feeDelivery;
+    @OneToMany(mappedBy = "delivery", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Order> listOrders;
 }

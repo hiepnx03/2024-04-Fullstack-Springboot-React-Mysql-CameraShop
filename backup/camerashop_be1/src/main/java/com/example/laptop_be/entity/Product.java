@@ -5,44 +5,60 @@ import lombok.Data;
 
 import java.util.List;
 
-
-@Data
 @Entity
+@Data
 @Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_product")
     private int idProduct;
+
     @Column(name = "product_name")
     private String productName;
+
     @Column(name = "list_price")
-    private double listPrice;
+    private double listPrice; // Giá niêm yết
+
     @Column(name = "sell_price")
-    private double sellPrice;
+    private double sellPrice; // Giá bán
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
     @Column(name = "quantity")
-    private int quantity;
+    private int quantity; // Số lượng
     @Column(name = "avg_rating")
-    private double avgRating;
+    private double avgRating; // Trung bình xếp hạng
     @Column(name = "sold_quantity")
-    private int soldQuantity;
+    private int soldQuantity; // Đã bán bao nhiêu
     @Column(name = "discount_percent")
-    private int discountPercent;
+    private int discountPercent; // Giảm giá bao nhiêu %
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "id_product"), inverseJoinColumns = @JoinColumn(name = "id_category"))
-    private List<Category> categoryList;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "product_category",
+            joinColumns = @JoinColumn(name = "id_product"),
+            inverseJoinColumns = @JoinColumn(name = "id_category")
+    )
+    private List<Category> categoryList;  // danh sach the loai
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Image> imageList;
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Review> reviewList;
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderDetail> orderDetailList;
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<FavoriteProduct> favoriteProductList;
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Image> imageList;  // danh sach anh
+
+    @OneToMany(mappedBy = "product" ,fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Review> reviewList; // danh sach danh gia
+
+    @OneToMany(mappedBy = "product" , fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH
+    })
+    private List<OrderDetail> orderDetailList;  // Danh sách chi tiết đơn hàng
+
+
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<FavoriteProduct> favoriteProductList; // Danh sách san pham yêu thích
+
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CartItem> listCartItems;
+
 }

@@ -26,15 +26,17 @@ public class EndPoint {
     public static final String[] ADMIN_ENDPOINT = {
             "/admin/**",
             "/**",
-            "/admin/products/**",
-            "/admin/categories/**"
+            "/admin/brands/**",
+            "/admin/categories/**",
+            "/admin/products/**"
     };
 
     public static final String[] MANAGER_ENDPOINT = {
             "/admin/**",
             "/**",
-            "/admin/products/**",
-            "/admin/categories/**"
+            "/admin/brands/**",
+            "/admin/categories/**",
+            "/admin/products/**"
     };
 
 

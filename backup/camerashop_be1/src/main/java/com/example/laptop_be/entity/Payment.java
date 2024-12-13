@@ -12,14 +12,14 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_payment")
-    private int idPayment;
+    private int idPayment; // Mã thanh toán
     @Column(name = "name_payment")
-    private String namePayment;
+    private String namePayment; // Tên thanh toán
     @Column(name = "description")
-    private String description;
+    private String description; // Mô tả
     @Column(name = "fee_payment")
-    private double feePayment;
+    private double feePayment; // Chi phí thanh toán
 
-    @OneToMany(mappedBy = "payment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Order> listOrders;
+    @OneToMany(mappedBy = "payment",fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Order> listOrders; // Danh sách đơn hàng
 }

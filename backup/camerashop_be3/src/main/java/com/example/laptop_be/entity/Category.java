@@ -12,14 +12,10 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_category")
-    private int idCategory;  // mã danh mục
+    private int idCategory;
     @Column(name = "category_name")
-    private String categoryName;  // tên danh muc
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "product_category",
-            joinColumns = @JoinColumn(name = "id_category"),
-            inverseJoinColumns = @JoinColumn(name = "id_product")
-    )
+    private String categoryName;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "id_category"), inverseJoinColumns = @JoinColumn(name = "id_product"))
     private List<Product> productList;
 }

@@ -27,19 +27,7 @@ public class Feedbacks {
     private Date dateCreated;
     @Column(name = "isReaded")
     private boolean isReaded;
-
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
-
-    @Override
-    public String toString() {
-        return "Feedbacks{" +
-                "idFeedback=" + idFeedback +
-                ", title='" + title + '\'' +
-                ", comment='" + comment + '\'' +
-                ", dateCreated=" + dateCreated +
-                ", isReaded=" + isReaded +
-                '}';
-    }
 }

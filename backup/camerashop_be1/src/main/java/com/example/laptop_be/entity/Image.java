@@ -10,17 +10,19 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_image")
-    private int idImage;
+    private int idImage; // Mã ảnh
     @Column(name = "name_image")
-    private String nameImage;
+    private String nameImage; // Tên ảnh
     @Column(name = "is_thumbnail")
-    private boolean isThumbnail;
+    private boolean isThumbnail; // Có phải là thumbnail không
     @Column(name = "url_image")
-    private String urlImage;
-    @Lob
+    private String urlImage; // Link hình ảnh
     @Column(name = "data_image", columnDefinition = "LONGTEXT")
-    private String dataImage;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @Lob
+    private String dataImage; // Dữ liệu ảnh
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_product", nullable = false)
-    private Product product;
+    private Product product; // Thuộc quyển sách nào
+
 }

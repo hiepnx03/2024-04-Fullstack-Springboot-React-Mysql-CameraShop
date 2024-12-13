@@ -31,9 +31,12 @@ public class SecurityConfig {
                 .csrf().disable()  // Cấu hình để vô hiệu hóa CSRF
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-//                        .requestMatchers("/admin/products").permitAll()
-//                        .requestMatchers("/admin/products/**").permitAll()
+                        .requestMatchers("/cart/**").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/addresses/**").hasAnyAuthority("ADMIN", "CLIENT")
+                        .requestMatchers(HttpMethod.POST, "/addresses/**").hasAnyAuthority("ADMIN", "CLIENT")
+                        .requestMatchers(HttpMethod.PUT, "/addresses/**").hasAnyAuthority("ADMIN", "CLIENT")
+                        .requestMatchers(HttpMethod.DELETE, "/addresses/**").hasAnyAuthority("ADMIN", "CLIENT")
 
                         .requestMatchers(HttpMethod.GET, "/admin/products/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/admin/products/**").hasAuthority("ADMIN")
@@ -44,6 +47,23 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/admin/categories/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/admin/categories/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/admin/categories/**").hasAuthority("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/admin/user/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/user/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/admin/user/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/user/**").hasAuthority("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/admin/brands/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/brands/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/admin/brands/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/brands/**").hasAuthority("ADMIN")
+
+
+                        .requestMatchers(HttpMethod.POST, "/admin/vouchers/apply").hasAnyAuthority("ADMIN","CLIENT")
+                        .requestMatchers(HttpMethod.GET, "/admin/vouchers/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/vouchers/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/admin/vouchers/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/vouchers/**").hasAuthority("ADMIN")
 
                         .anyRequest().permitAll() // Các yêu cầu khác phải xác thực
                 )
@@ -56,8 +76,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-
 
 
     @Bean

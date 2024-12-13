@@ -12,23 +12,21 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_review")
-    private long idReview; // Mã đánh giá
+    private long idReview;
     @Column(name = "content")
-    private String content; // Nội dung đánh giá
+    private String content;
     @Column(name = "rating_point")
-    private float ratingPoint; // Điểm xếp hạng
+    private float ratingPoint;
     @Column(name = "timestamp")
-    private Timestamp timestamp; // Thời gian mà comment
+    private Timestamp timestamp;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_product", nullable = false)
-    private Product product; // Đánh giá quyển sách nào
-
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Product product;
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user", nullable = false)
-    private User user; // Người dùng (ai là người đánh giá)
-
-    @OneToOne( cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private User user;
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_order_detail")
     private OrderDetail orderDetail;
 }

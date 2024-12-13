@@ -35,15 +35,10 @@ public class SecurityConfig {
 //                        .requestMatchers("/admin/products/**").permitAll()
 
 
-                        .requestMatchers(HttpMethod.GET, "/admin/products/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/admin/products/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/admin/products/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/admin/products/**").hasAuthority("ADMIN")
-
-                        .requestMatchers(HttpMethod.GET, "/admin/categories/**").hasAnyAuthority("CLIENT", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/admin/categories/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/admin/categories/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/admin/categories/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/products/**").hasAnyAuthority("CLIENT", "ADMIN")  // Cho phép quyền USER và ADMIN xem sản phẩm
+                        .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority("ADMIN")  // Chỉ ADMIN có thể tạo sản phẩm
+                        .requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("ADMIN")  // Chỉ ADMIN có thể sửa sản phẩm
+                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasAuthority("ADMIN")  // Chỉ ADMIN có thể xóa sản phẩm
 
                         .anyRequest().permitAll() // Các yêu cầu khác phải xác thực
                 )

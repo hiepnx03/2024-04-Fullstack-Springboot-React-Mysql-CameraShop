@@ -10,19 +10,19 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order_detail")
-    private long idOrderDetail; // Mã chi tiết đơn hàng
+    private long idOrderDetail;
     @Column(name = "quantity")
-    private int quantity; // Số lượng
+    private int quantity;
     @Column(name = "price")
-    private double price; // Giá của 1 don hang
+    private double price;
     @Column(name = "is_review")
-    private boolean isReview; // đã đánh giá chưa
+    private boolean isReview;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH})
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "id_product", nullable = false)
-    private Product product; // Sách
+    private Product product;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_order", nullable = false)
-    private Order order; // Đơn hàng
+    private Order order;
 }

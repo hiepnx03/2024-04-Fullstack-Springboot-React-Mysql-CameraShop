@@ -16,11 +16,14 @@ public class FavoriteProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_favorite_product")
-    private int idFavoriteBook;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private int idFavoriteBook; // Mã san pham yêu thích
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_product", nullable = false)
-    private Product product;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private Product product; // Sách (thích quyển sách nào)
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_user", nullable = false)
-    private User user;
+    private User user; // Người dùng (ai thích quyển sách này)
 }
+

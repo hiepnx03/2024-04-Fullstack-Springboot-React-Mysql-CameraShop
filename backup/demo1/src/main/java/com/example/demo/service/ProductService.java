@@ -13,7 +13,7 @@ public interface ProductService {
     public ProductDTO addProduct(ProductDTO productDTO);
     public Optional<ProductDTO> getProductById(Long id);
     public List<ProductDTO> getAllProducts();
-    public boolean deleteProduct(Long id);
+    public void deleteProduct(Long id);
     public Page<ProductDTO> getAllProductsPaged(int page, int size, String sortBy, String direction);
     Page<ProductDTO> searchProductsByName(String name, int page, int size);
     Page<ProductDTO> filterProductsByPrice(double minPrice, double maxPrice, int page, int size, String sortBy, String direction);

@@ -1,57 +1,43 @@
 package com.example.laptop_be.controller;
 
-import com.example.laptop_be.dao.CategoryRepository;
-import com.example.laptop_be.entity.Category;
+import com.example.laptop_be.dto.CategoryDTO;
+import com.example.laptop_be.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "http://localhost:3000") // Cho phép các yêu cầu từ domain này
 public class CategoryController {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
 
-    // Lấy danh sách tất cả danh mục sản phẩm
-    @GetMapping
-    @CrossOrigin(origins = "http://localhost:3000") // Cho phép các yêu cầu từ domain này
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
-
-    // Lấy thông tin của một danh mục sản phẩm dựa trên id
-    @GetMapping("/{categoryId}")
-    @CrossOrigin(origins = "http://localhost:3000") // Cho phép các yêu cầu từ domain này
-    public Category getCategoryById(@PathVariable int categoryId) {
-        return categoryRepository.findById(categoryId).orElse(null);
-    }
-
-    // Tạo mới một danh mục sản phẩm
     @PostMapping
-    @CrossOrigin(origins = "http://localhost:3000") // Cho phép các yêu cầu từ domain này
-    public Category createCategory(@RequestBody Category category) {
-        return categoryRepository.save(category);
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
+        return ResponseEntity.ok(categoryService.createCategory(categoryDTO));
     }
 
-    // Cập nhật thông tin của một danh mục sản phẩm
-    @PutMapping("/{categoryId}")
-    @CrossOrigin(origins = "http://localhost:3000") // Cho phép các yêu cầu từ domain này
-    public Category updateCategory(@PathVariable int categoryId, @RequestBody Category categoryDetails) {
-        Category category = categoryRepository.findById(categoryId).orElse(null);
-        if (category != null) {
-            category.setCategoryName(categoryDetails.getCategoryName());
-            return categoryRepository.save(category);
-        }
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable int id) {
+        return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
-    // Xóa một danh mục sản phẩm
-    @DeleteMapping("/{categoryId}")
-    @CrossOrigin(origins = "http://localhost:3000") // Cho phép các yêu cầu từ domain này
-    public void deleteCategory(@PathVariable int categoryId) {
-        categoryRepository.deleteById(categoryId);
+    @GetMapping
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        return ResponseEntity.ok(categoryService.getAllCategories());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable int id, @RequestBody CategoryDTO categoryDTO) {
+        return ResponseEntity.ok(categoryService.updateCategory(id, categoryDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.converter.ImageConverter;
 import com.example.demo.converter.ProductConverter;
+import com.example.demo.dto.ImageDTO;
 import com.example.demo.dto.ProductDTO;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Image;
@@ -9,6 +10,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ImageRepository;
 import com.example.demo.repository.ProductRepository;
+import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -188,9 +191,8 @@ public class ProductServiceImpl implements ProductService {
 
     // Xóa sản phẩm theo ID
     @Override
-    public boolean deleteProduct(Long id) {
+    public void deleteProduct(Long id) {
         productRepository.deleteById(id);
-        return false;
     }
 
 }

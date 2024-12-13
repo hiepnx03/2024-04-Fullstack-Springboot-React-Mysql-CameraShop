@@ -1,7 +1,6 @@
 package com.example.demo.converter;
 
 import com.example.demo.dto.UserDTO;
-import com.example.demo.dto.response.UserResponse;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import lombok.AllArgsConstructor;
@@ -9,8 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -54,32 +53,6 @@ public class UserConverter {
 //        user.setRoles(roles);
 //        return user;
         return modelMapper.map(userDTO, User.class);
-    }
-
-
-
-    public UserResponse convertToResponse(Page<User> entity) {
-        // Chuyển đổi page thành danh sách userDTO
-        List<User> users = entity.getContent();
-
-        // Sử dụng ModelMapper để chuyển đổi User thành UserResponse (có thể là một đối tượng chung cho các user)
-        UserResponse userResponse = new UserResponse();
-        List<String> roleNames = new ArrayList<>();
-
-        // Duyệt qua tất cả User trong Page để lấy danh sách vai trò
-        for (User user : users) {
-            // Lấy tên vai trò từ user và thêm vào danh sách roleNames
-            List<String> roles = user.getRoles().stream()
-                    .map(Role::getName)
-                    .toList();
-            roleNames.addAll(roles);  // Thêm tất cả các vai trò của từng user vào danh sách
-        }
-
-        // Cập nhật các vai trò vào userResponse
-        userResponse.setRoles(roleNames);
-
-        // Trả về đối tượng UserResponse đã được chuyển đổi
-        return userResponse;
     }
 
 

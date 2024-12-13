@@ -21,4 +21,5 @@ public class CategoryDTO {
     private boolean visible;
 
     private Set<Long> productIds = new HashSet<>(); // Holds product names to avoid null
+    private Long brandId;
 }

@@ -29,6 +29,7 @@ public class DataLoader implements CommandLineRunner {
     private final OrderDetailRepository orderDetailRepository;
     private final AddressRepository addressRepository;
     private final ImageRepository imageRepository;
+    private final BrandRepository brandRepository;
 
 
     @Override
@@ -106,6 +107,7 @@ public class DataLoader implements CommandLineRunner {
     // Phương thức để thêm tất cả dữ liệu
     private void addAllData() {
         // Thêm các danh mục và sản phẩm
+        addBrands();
         List<Category> categories = addCategories();
         addProducts(categories);
 
@@ -130,23 +132,168 @@ public class DataLoader implements CommandLineRunner {
     }
 
 
+    private List<Brand> addBrands() {
+        System.out.println("Adding camera brands...");
+
+        // Thêm các brand máy ảnh
+
+        // Brand 1: Canon
+        Brand brand = new Brand();
+        brand.setName("Canon");
+        brand.setDescription("Canon is a global leader in imaging and optical products, known for its cameras and lenses.");
+        brand.setLogo("https://example.com/canon_logo.png");
+        brand.setWebsite("https://www.canon.com");
+        brand.setActive(true);
+        brand.setCreatedBy("ADMIN");
+        brand.setUpdatedBy("ADMIN");
+        brand.setDeleted(false);
+        brandRepository.save(brand);
+
+        // Brand 2: Sony
+        Brand brand1 = new Brand();
+        brand1.setName("Sony");
+        brand1.setDescription("Sony is a leading manufacturer of digital cameras and lenses.");
+        brand1.setLogo("https://example.com/sony_logo.png");
+        brand1.setWebsite("https://www.sony.com");
+        brand1.setActive(true);
+        brand1.setCreatedBy("ADMIN");
+        brand1.setUpdatedBy("ADMIN");
+        brand1.setDeleted(false);
+        brandRepository.save(brand1);
+
+        // Brand 3: Nikon
+        Brand brand2 = new Brand();
+        brand2.setName("Nikon");
+        brand2.setDescription("Nikon is a global leader in the photography industry, specializing in digital cameras and lenses.");
+        brand2.setLogo("https://example.com/nikon_logo.png");
+        brand2.setWebsite("https://www.nikon.com");
+        brand2.setActive(true);
+        brand2.setCreatedBy("ADMIN");
+        brand2.setUpdatedBy("ADMIN");
+        brand2.setDeleted(false);
+        brandRepository.save(brand2);
+
+        // Brand 4: Fujifilm
+        Brand brand3 = new Brand();
+        brand3.setName("Fujifilm");
+        brand3.setDescription("Fujifilm is a well-known brand for cameras, photographic film, and imaging equipment.");
+        brand3.setLogo("https://example.com/fujifilm_logo.png");
+        brand3.setWebsite("https://www.fujifilm.com");
+        brand3.setActive(true);
+        brand3.setCreatedBy("ADMIN");
+        brand3.setUpdatedBy("ADMIN");
+        brand3.setDeleted(false);
+        brandRepository.save(brand3);
+
+        // Brand 5: Panasonic
+        Brand brand4 = new Brand();
+        brand4.setName("Panasonic");
+        brand4.setDescription("Panasonic manufactures cameras, camcorders, and optical equipment.");
+        brand4.setLogo("https://example.com/panasonic_logo.png");
+        brand4.setWebsite("https://www.panasonic.com");
+        brand4.setActive(true);
+        brand4.setCreatedBy("ADMIN");
+        brand4.setUpdatedBy("ADMIN");
+        brand4.setDeleted(false);
+        brandRepository.save(brand4);
+
+        System.out.println("Camera brands added successfully!");
+
+        // Trả về danh sách các hãng máy ảnh đã thêm
+        return List.of(brand, brand1, brand2, brand3, brand4);
+    }
+
+
+
+
 
     private List<Category> addCategories() {
-        System.out.println("Adding categories...");
+        System.out.println("Adding camera-related categories...");
 
-        // Các danh mục khác
-        Category electronics = new Category();
-        electronics.setName("Electronics");
-        categoryRepository.save(electronics);
+        // Lấy các Brand đã tạo từ trước
+        Brand canonBrand = brandRepository.findByName("Canon");
+        Brand sonyBrand = brandRepository.findByName("Sony");
+        Brand nikonBrand = brandRepository.findByName("Nikon");
+        Brand fujifilmBrand = brandRepository.findByName("Fujifilm");
+        Brand panasonicBrand = brandRepository.findByName("Panasonic");
 
-        // Thêm danh mục Máy ảnh
+        // Thêm danh mục cho Canon
         Category camera = new Category();
         camera.setName("Camera");
-        categoryRepository.save(camera);
+        camera.setDescription("Digital cameras including DSLR, mirrorless, and compact cameras.");
+        camera.setImage("https://example.com/camera_image.png");
+        camera.setActive(true);
+        camera.setDeleted(false);
+        camera.setEditable(true);
+        camera.setVisible(true);
+        camera.setBrand(canonBrand);  // Gán Brand Canon cho Category Camera
+        camera.setCreatedBy("ADMIN");
+        camera.setUpdatedBy("ADMIN");
+        categoryRepository.save(camera);  // Lưu danh mục
 
-        System.out.println("Categories added successfully!");
-        return List.of(electronics, camera); // Trả về danh sách danh mục, bao gồm Camera
+        // Thêm danh mục cho Sony
+        Category mirrorless = new Category();
+        mirrorless.setName("Mirrorless Cameras");
+        mirrorless.setDescription("Mirrorless cameras for professional and personal use, offering high performance.");
+        mirrorless.setImage("https://example.com/mirrorless_image.png");
+        mirrorless.setActive(true);
+        mirrorless.setDeleted(false);
+        mirrorless.setEditable(true);
+        mirrorless.setVisible(true);
+        mirrorless.setBrand(sonyBrand);  // Gán Brand Sony cho Category Mirrorless
+        mirrorless.setCreatedBy("ADMIN");
+        mirrorless.setUpdatedBy("ADMIN");
+        categoryRepository.save(mirrorless);  // Lưu danh mục
+
+        // Thêm danh mục cho Nikon
+        Category dslr = new Category();
+        dslr.setName("DSLR Cameras");
+        dslr.setDescription("DSLR cameras, offering high-quality photography with advanced features.");
+        dslr.setImage("https://example.com/dslr_image.png");
+        dslr.setActive(true);
+        dslr.setDeleted(false);
+        dslr.setEditable(true);
+        dslr.setVisible(true);
+        dslr.setBrand(nikonBrand);  // Gán Brand Nikon cho Category DSLR
+        dslr.setCreatedBy("ADMIN");
+        dslr.setUpdatedBy("ADMIN");
+        categoryRepository.save(dslr);  // Lưu danh mục
+
+        // Thêm danh mục cho Fujifilm
+        Category instant = new Category();
+        instant.setName("Instant Cameras");
+        instant.setDescription("Instant cameras for fun, instant photo printing.");
+        instant.setImage("https://example.com/instant_image.png");
+        instant.setActive(true);
+        instant.setDeleted(false);
+        instant.setEditable(true);
+        instant.setVisible(true);
+        instant.setBrand(fujifilmBrand);  // Gán Brand Fujifilm cho Category Instant Cameras
+        instant.setCreatedBy("ADMIN");
+        instant.setUpdatedBy("ADMIN");
+        categoryRepository.save(instant);  // Lưu danh mục
+
+        // Thêm danh mục cho Panasonic
+        Category camcorders = new Category();
+        camcorders.setName("Camcorders");
+        camcorders.setDescription("High-definition camcorders for video recording and filmmaking.");
+        camcorders.setImage("https://example.com/camcorders_image.png");
+        camcorders.setActive(true);
+        camcorders.setDeleted(false);
+        camcorders.setEditable(true);
+        camcorders.setVisible(true);
+        camcorders.setBrand(panasonicBrand);  // Gán Brand Panasonic cho Category Camcorders
+        camcorders.setCreatedBy("ADMIN");
+        camcorders.setUpdatedBy("ADMIN");
+        categoryRepository.save(camcorders);  // Lưu danh mục
+
+        System.out.println("Camera-related categories added successfully!");
+
+        // Trả về danh sách các Category đã thêm
+        return List.of(camera, mirrorless, dslr, instant, camcorders);
     }
+
+
 
 
     private void addProducts(List<Category> categories) {
@@ -161,7 +308,6 @@ public class DataLoader implements CommandLineRunner {
             product.setQuantity(50.0 * i);
             product.setSoldQuantity(10.0 * i);
             product.setCategories(getCameraCategories(categories));
-
             productRepository.save(product);  // Lưu sản phẩm vào cơ sở dữ liệu
         });
 

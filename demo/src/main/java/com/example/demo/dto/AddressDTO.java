@@ -19,5 +19,6 @@ public class AddressDTO {
     private String street;
     private String description;
     private Integer status;
+
     private Long userId;
 }
