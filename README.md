@@ -9,15 +9,21 @@ quản lý sản phẩm và danh mục (chưa hoạt động được, chưa đ�
 
 ---- BE 
 
-Dataload (thêm dữ liệu khi chạy ứng dụng)
-VNPAY (BUG)
++ Dataload (thêm dữ liệu khi chạy ứng dụng)
++ VNPAY (BUG)
 
-đăng nhập JWT, phân quyền USER Và ADMIN
++ đăng nhập JWT, phân quyền USER Và ADMIN
 
 ADMIN có thể CRUD Product, Category...
 USER chỉ có thể xem
 
-tính năng quên mật khẩu , gửi gmail về và xác thực
++ tính năng quên mật khẩu, gửi gmail về và xác thực
 
 24-12-13 thêm các controller , service , serviceImpl , repository , dto , converter của "voucher, cartitem, address, brand (hãng sản xuất)" 
 đôi lại tên database
+
+24-12-15 
++ chức năng khoá tài khoản khi nhập sai 5 lần (sẽ khoá trong 5p)
++ chức năng CRUD giỏ hàng
++ chức năng đặt hàng
++ MOMO,ZALOPAY,PAYPAL(BUG)

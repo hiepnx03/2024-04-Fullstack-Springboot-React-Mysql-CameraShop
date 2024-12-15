@@ -36,9 +36,14 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         try {
             Map<String, String> tokens = userService.login(loginDTO);
+            System.out.println("Thành công: " + tokens);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Login successful", tokens));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            System.out.println("Thất bại: " + e.getMessage());
             return ResponseEntity.badRequest().body(new ResponseObject("failed", e.getMessage(), ""));
+        } catch (Exception e) {
+            System.out.println("Thất bại: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseObject("failed", "An error occurred", ""));
         }
     }
 

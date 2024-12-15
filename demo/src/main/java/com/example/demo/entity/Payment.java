@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 
 @Getter
 @Setter
@@ -14,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "payment")
-public class Payment extends Base<String>  {
+public class Payment extends Base<String>  implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name="status")

@@ -129,18 +129,76 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, String> login(LoginDTO loginDTO) {
         User user = userRepository.findByUserName(loginDTO.getUserName());
+
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Invalid username or password");
+
+        // Kiểm tra nếu đã hơn 5 phút kể từ lần đăng nhập sai cuối
+        if (user.getLastFailedAttemptTime() != null) {
+            long timeDifference = new Date().getTime() - user.getLastFailedAttemptTime().getTime();
+            long resetDuration = 5 * 60 * 1000; // 5 phút tính bằng mili giây
+
+            if (timeDifference > resetDuration) {
+                // Nếu hơn 5 phút, reset failed_attempt về 0
+                user.setFailedAttempt(0);
+                userRepository.save(user);
+            }
         }
+
+        // Kiểm tra nếu tài khoản bị khóa
+        if (user.getFailedAttempt() >= 5) {
+            Date lockTime = user.getLockTime();
+            long lockDuration = 5 * 60 * 1000; // 5 phút tính bằng mili giây
+            long timeDifference = new Date().getTime() - lockTime.getTime();
+
+            if (timeDifference < lockDuration) {
+                // Tài khoản vẫn bị khóa
+                long remainingLockTime = (lockDuration - timeDifference) / 1000; // thời gian còn lại tính bằng giây
+                throw new RuntimeException("Your account is locked. Please try again after " + remainingLockTime + " seconds.");
+            } else {
+                // Thời gian khóa đã hết, reset lại failedAttempt và lockTime
+                user.setFailedAttempt(0);
+                user.setLockTime(null);
+                userRepository.save(user);
+            }
+        }
+
+        // Kiểm tra mật khẩu
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            user.setFailedAttempt(user.getFailedAttempt() + 1);
+            // Cập nhật thời gian đăng nhập sai cuối cùng
+            user.setLastFailedAttemptTime(new Date());
+
+            // Nếu số lần thất bại đạt 5, khóa tài khoản
+            if (user.getFailedAttempt() >= 5) {
+                user.setLockTime(new Date());
+                userRepository.save(user);
+                throw new RuntimeException("Your account is locked due to multiple failed login attempts. Please try again after 5 minutes.");
+            }
+
+            userRepository.save(user);
+            // Trả về số lần thử còn lại nếu mật khẩu sai
+            int remainingAttempts = 5 - user.getFailedAttempt();
+            throw new BadCredentialsException("Invalid username or password. You have " + remainingAttempts + " attempts remaining.");
+        }
+
+        // Reset số lần thất bại nếu đăng nhập thành công
+        user.setFailedAttempt(0);
+        // Cập nhật thời gian đăng nhập cuối cùng
+        user.setLastFailedAttemptTime(null); // Reset thời gian đăng nhập sai khi đăng nhập thành công
+        userRepository.save(user);
+
         List<String> roleName = user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
         String accessToken = jwtUtils.generateToken(user.getUserName(), roleName);
         return Map.of("access_token", accessToken);
     }
+
+
+
+
 
 
     @Override

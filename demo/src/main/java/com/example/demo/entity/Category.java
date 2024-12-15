@@ -1,32 +1,41 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
-public class Category extends Base<String> {
+public class Category extends Base<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "Category name cannot be null")
+    @Size(min = 2, max = 100, message = "Category name should have between 2 and 100 characters")
+    @Column(nullable = false)
     private String name;
+
     private String description;
     private String image;
     private boolean active;
-    private String category;
     private boolean deleted;
     private boolean editable;
     private boolean visible;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
-    private Brand brand; // Mối quan hệ với hãng
+    private Brand brand;
 
-    @ManyToMany(mappedBy = "categories",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Set<Product> products = new HashSet<>(); // Danh sách sản phẩm thuộc danh mục này
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonIgnore
+    private Set<Product> products = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

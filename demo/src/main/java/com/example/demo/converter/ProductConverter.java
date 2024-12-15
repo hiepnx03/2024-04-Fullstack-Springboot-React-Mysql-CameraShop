@@ -2,11 +2,13 @@ package com.example.demo.converter;
 
 import com.example.demo.dto.ImageDTO;
 import com.example.demo.dto.ProductDTO;
+import com.example.demo.dto.response.ProductResponse;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Image;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -16,9 +18,13 @@ import java.util.stream.Collectors;
 
 @Component
 public class ProductConverter {
+
+    private final ModelMapper modelMapper;
     private final CategoryRepository categoryRepository;
 
-    public ProductConverter(CategoryRepository categoryRepository) {
+
+    public ProductConverter(ModelMapper modelMapper, CategoryRepository categoryRepository) {
+        this.modelMapper = modelMapper;
         this.categoryRepository = categoryRepository;
     }
 
@@ -79,5 +85,14 @@ public class ProductConverter {
         }).collect(Collectors.toSet());
     }
 
+
+    public ProductResponse convertToResponse(Product product) {
+        ProductResponse productResponse = modelMapper.map(product, ProductResponse.class);
+        if(product.getImages()!=null&&product.getImages().size()>0){
+            ImageDTO imageDTO = modelMapper.map(product.getImages().getClass(), ImageDTO.class);
+            productResponse.setImage(imageDTO);
+        }
+        return productResponse;
+    }
 
 }

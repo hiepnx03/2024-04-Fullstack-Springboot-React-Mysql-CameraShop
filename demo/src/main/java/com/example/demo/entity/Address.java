@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "address")
-public class Address extends Base<String> {
+public class Address extends Base<String> implements Serializable {
 	private String firstName;
 	private String lastName;
 	private String phone;

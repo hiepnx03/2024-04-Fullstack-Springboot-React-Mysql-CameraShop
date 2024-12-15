@@ -10,6 +10,8 @@ import lombok.Setter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import java.io.Serializable;
+
 
 @Setter
 @Getter
@@ -17,7 +19,7 @@ import org.hibernate.annotations.NotFoundAction;
 @AllArgsConstructor
 @Entity
 @Table(name = "order_detail")
-public class OrderDetail {
+public class OrderDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

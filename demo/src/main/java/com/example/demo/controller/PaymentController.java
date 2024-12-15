@@ -6,8 +6,11 @@ import com.example.demo.dto.response.MomoCreatePaymentResponse;
 import com.example.demo.dto.response.VnPayCreatePaymentResponse;
 import com.example.demo.dto.response.ZaloPayCreatePaymentResponse;
 import com.example.demo.service.MomoService;
+import com.example.demo.service.PayPalService;
 import com.example.demo.service.VNPayService;
 import com.example.demo.service.ZaloPayService;
+import com.paypal.api.payments.Links;
+import com.paypal.base.rest.PayPalRESTException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,7 @@ public class PaymentController {
     private final VNPayService vnPayService;
     private final ZaloPayService zaloPayService;
     private final MomoService momoService;
+    private final PayPalService payPalService;
 
     // Phương thức tạo URL thanh toán VNPay
     @PostMapping("/create-vnpay-payment-url")
@@ -84,5 +88,42 @@ public class PaymentController {
                                        @RequestParam String orderInfo) {
         MomoCreatePaymentResponse response = momoService.generateMomoPayPaymentUrl(orderId, amount, orderInfo);
         return "Redirecting to MoMo: " + response.getPayUrl();
+    }
+
+
+    // Tạo thanh toán PayPal
+    @PostMapping("/create-paypal-payment")
+    public ResponseEntity<String> createPaypalPayment(@RequestParam Double total,
+                                                      @RequestParam String currency,
+                                                      @RequestParam String cancelUrl,
+                                                      @RequestParam String successUrl)
+    {
+        try {
+            com.paypal.api.payments.Payment payment = payPalService.createPayment(total, currency, "paypal", "sale",
+                    "Payment description", cancelUrl, successUrl);
+
+            // Chuyển hướng đến URL PayPal
+            for (Links link : payment.getLinks()) {
+                if (link.getRel().equals("approval_url")) {
+                    return ResponseEntity.ok(link.getHref());
+                }
+            }
+            return ResponseEntity.status(500).body("Error: PayPal approval URL not found.");
+        } catch (PayPalRESTException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error creating PayPal payment.");
+        }
+    }
+
+    // Xử lý thông báo từ PayPal sau khi thanh toán
+    @GetMapping("/paypal-return")
+    public String paypalReturn(@RequestParam String paymentId, @RequestParam String payerId) {
+        try {
+            String payment = payPalService.executePayment(paymentId, payerId);
+            return "Payment executed successfully: " + payment.toString();
+        } catch (PayPalRESTException e) {
+            e.printStackTrace();
+            return "Error executing payment.";
+        }
     }
 }

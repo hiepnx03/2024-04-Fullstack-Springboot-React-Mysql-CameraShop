@@ -462,7 +462,7 @@ public class DataLoader implements CommandLineRunner {
     private void createOrdersAndOrderDetails() {
         User client = userRepository.findByUserName("CLIENT");
 
-        ShippingStatus deliveringStatus = shippingStatusRepository.findByName("DELIVERING").orElseThrow();
+        ShippingStatus deliveringStatus = shippingStatusRepository.findByName("DELIVERING");
         Payment payment = paymentRepository.findByPayer("Client").orElseThrow();
 
         Order order = new Order();

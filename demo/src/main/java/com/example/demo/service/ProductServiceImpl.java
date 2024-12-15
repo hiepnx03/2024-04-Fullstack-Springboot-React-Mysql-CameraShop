@@ -3,12 +3,14 @@ package com.example.demo.service;
 import com.example.demo.converter.ImageConverter;
 import com.example.demo.converter.ProductConverter;
 import com.example.demo.dto.ProductDTO;
+import com.example.demo.dto.response.ProductResponse;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Image;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ImageRepository;
 import com.example.demo.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -134,9 +135,13 @@ public class ProductServiceImpl implements ProductService {
 
     // Lấy sản phẩm theo ID
     @Override
-    public Optional<ProductDTO> getProductById(Long id) {
-        return productRepository.findById(id)
-                .map(productConverter::toDTO);
+    public Product getProductById(Long id) {
+        try {
+            return productRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Product " + id + " does not exist!"));
+        } catch (Exception e) {
+            throw new RuntimeException("Product " + id + " is not found!");
+        }
     }
 
     // Lấy tất cả sản phẩm
@@ -187,12 +192,36 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> add(List<Product> products) {
+        try {
+            return productRepository.saveAll(products);
+        } catch (Exception e) {
+            throw new RuntimeException("Save product failed!");
+        }
+    }
+
+
+
+    @Override
     public boolean deleteProduct(Long id) {
         if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
             return true;  // Indicate the product was deleted successfully
         }
         return false;  // Indicate the product was not found
+    }
+
+    public ProductResponse getById(Long id) {
+        try {
+            // Retrieve the product wrapped in an Optional and get the actual Product object
+            Product product = productRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Product " + id + " does not exist!"));
+
+            // Now you can pass the actual Product to the converter
+            return productConverter.convertToResponse(product);
+        } catch (Exception e) {
+            throw new RuntimeException("Product " + id + " is not found!", e);
+        }
     }
 
 

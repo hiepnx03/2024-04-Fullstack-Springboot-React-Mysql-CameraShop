@@ -2,15 +2,16 @@ package com.example.demo.controller;
 
 
 import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.request.ChangePasswordRequest;
+import com.example.demo.dto.response.ChangePasswordResponse;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
+import com.example.demo.service.PasswordHistoryService;
 import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final PasswordHistoryService passwordHistoryService;
+
 
     // API to get all users
     @GetMapping
@@ -49,4 +52,11 @@ public class UserController {
         }
     }
 
+    @PostMapping("/{userId}/change-password")
+    public ResponseEntity<ChangePasswordResponse> changePassword(
+            @PathVariable Long userId,
+            @RequestBody @Valid ChangePasswordRequest request) {
+        String message = passwordHistoryService.changePassword(userId, request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok(new ChangePasswordResponse(message));
+    }
 }

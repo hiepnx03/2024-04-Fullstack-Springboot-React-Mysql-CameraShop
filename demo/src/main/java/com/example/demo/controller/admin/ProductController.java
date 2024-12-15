@@ -1,6 +1,7 @@
 package com.example.demo.controller.admin;
 
 import com.example.demo.dto.ProductDTO;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.ResponseObject;
 import com.example.demo.service.ProductService;
 import lombok.AllArgsConstructor;
@@ -46,17 +47,18 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProductById(@PathVariable Long id) {
         try {
-            Optional<ProductDTO> product = productService.getProductById(id);
-            if (product.isEmpty()) {
+            Product product = productService.getProductById(id);
+            if (product == null) { // Check if the product is null
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ResponseObject("error", "Product with ID " + id + " not found", null));
             }
-            return ResponseEntity.ok(new ResponseObject("ok", "Product retrieved successfully", product.get()));
+            return ResponseEntity.ok(new ResponseObject("ok", "Product retrieved successfully", product));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseObject("error", "Failed to retrieve product: " + e.getMessage(), null));
         }
     }
+
 
     @PostMapping
     public ResponseEntity<ResponseObject> createProduct(@RequestBody ProductDTO productDTO) {
