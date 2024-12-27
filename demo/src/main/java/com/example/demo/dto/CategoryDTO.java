@@ -33,7 +33,8 @@ public class CategoryDTO {
     private boolean editable;  // Trạng thái có thể chỉnh sửa không cần validation vì là kiểu boolean
 
     private boolean visible;  // Trạng thái hiển thị không cần validation vì là kiểu boolean
-
+    private Integer status;
+    private String slug;
     @NotNull(message = "Product IDs cannot be null.")
     private Set<Long> productIds = new HashSet<>(); // Danh sách các sản phẩm không được null
 

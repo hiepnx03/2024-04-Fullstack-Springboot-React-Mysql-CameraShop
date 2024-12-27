@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.converter.UserConverter;
 import com.example.demo.dto.LoginDTO;
@@ -9,11 +9,11 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
 import com.example.demo.util.JwtUtils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import net.bytebuddy.utility.RandomString;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, String> login(LoginDTO loginDTO) {
-        User user = userRepository.findByUserName(loginDTO.getUserName());
+        User user = userRepository.findByUserName(loginDTO.getUsername());
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");

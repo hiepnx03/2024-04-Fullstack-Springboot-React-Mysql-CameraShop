@@ -45,5 +45,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("maxSellPrice") Double maxSellPrice,
             Pageable pageable);
 
+
+
+    Page<Product> findAllBySellPriceLessThanEqual(Double sellPrice, Pageable pageable);
+    Page<Product> findAllBySellPriceLessThanEqualAndStatus(Double sellPrice,Integer status, Pageable pageable);
+    Page<Product> findAllByCategoriesSlugAndSellPriceLessThanEqual(String slug, Double sellPrice, Pageable pageable);
+    Page<Product> findAllByCategoriesSlugAndSellPriceLessThanEqualAndStatus(String slug, Double sellPrice, Integer status, Pageable pageable);
 }
 

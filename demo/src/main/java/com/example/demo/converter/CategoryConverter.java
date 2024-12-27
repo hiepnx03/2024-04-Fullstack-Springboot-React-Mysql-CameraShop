@@ -3,6 +3,8 @@ package com.example.demo.converter;
 import com.example.demo.dto.CategoryDTO;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -12,7 +14,28 @@ import java.util.stream.Collectors;
 @Component
 public class CategoryConverter {
 
-    public CategoryDTO convertToDTO(Category category) {
+    private final ModelMapper modelMapper;
+
+    public CategoryConverter(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
+    public Page<CategoryDTO> convertToDTO(Page<Category> pageEntity) {
+        if (pageEntity == null) {
+            return null;
+        }
+        return pageEntity.map(this::convertToDto);
+    }
+//
+//    public CategoryDTO convertToDto(Category category) {
+//        return modelMapper.map(category, CategoryDTO.class);
+//    }
+//
+//    public Category convertToEntity(CategoryDTO categoryDTO) {
+//        return modelMapper.map(categoryDTO, Category.class);
+//    }
+
+    public CategoryDTO convertToDto(Category category) {
         if (category == null) {
             return null;
         }

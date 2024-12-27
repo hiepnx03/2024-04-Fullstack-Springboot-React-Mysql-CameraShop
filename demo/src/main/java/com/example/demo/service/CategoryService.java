@@ -18,6 +18,6 @@ public interface CategoryService {
     public List<ProductDTO> getProductsByCategoryId(Long categoryId) ;
     public CategoryDTO update(CategoryDTO categoryDTO) ;
     public void delete(Long id) ;
-
+    public Page<CategoryDTO> getAll(Integer status,Integer page,Integer size);
     public Page<Category> searchCategories(String keyword, int page, int size);
 }

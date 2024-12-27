@@ -20,6 +20,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT c FROM Category c JOIN FETCH c.products")
     List<Category> findAllCategoriesWithProducts();
 //    Category findByName(String name);
+    Page<Category> findAllByStatus(Integer status,Pageable pageable);
 
 
     // Tìm kiếm theo tên danh mục (case-insensitive) với Native Query và phân trang

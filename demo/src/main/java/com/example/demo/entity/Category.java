@@ -28,9 +28,11 @@ public class Category extends Base<String> implements Serializable {
     private boolean deleted;
     private boolean editable;
     private boolean visible;
-
+    private String slug;
+    private Integer status;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
+    @JsonIgnore
     private Brand brand;
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

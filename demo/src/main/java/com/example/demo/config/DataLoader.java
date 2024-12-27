@@ -34,11 +34,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        createAdminRoleIfNotExist();
-        createClientRoleIfNotExist();
 
-        createAdminUserIfNotExist();
-        createClientUserIfNotExist();
 
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
@@ -107,6 +103,11 @@ public class DataLoader implements CommandLineRunner {
     // Phương thức để thêm tất cả dữ liệu
     private void addAllData() {
         // Thêm các danh mục và sản phẩm
+        createAdminRoleIfNotExist();
+        createClientRoleIfNotExist();
+        createAdminUserIfNotExist();
+        createClientUserIfNotExist();
+
         addBrands();
         List<Category> categories = addCategories();
         addProducts(categories);
@@ -220,12 +221,14 @@ public class DataLoader implements CommandLineRunner {
         // Thêm danh mục cho Canon
         Category camera = new Category();
         camera.setName("Camera");
+        camera.setSlug("camera");
         camera.setDescription("Digital cameras including DSLR, mirrorless, and compact cameras.");
         camera.setImage("https://example.com/camera_image.png");
         camera.setActive(true);
         camera.setDeleted(false);
         camera.setEditable(true);
         camera.setVisible(true);
+        camera.setStatus(1);
         camera.setBrand(canonBrand);  // Gán Brand Canon cho Category Camera
         camera.setCreatedBy("ADMIN");
         camera.setUpdatedBy("ADMIN");
@@ -234,12 +237,14 @@ public class DataLoader implements CommandLineRunner {
         // Thêm danh mục cho Sony
         Category mirrorless = new Category();
         mirrorless.setName("Mirrorless Cameras");
+        mirrorless.setSlug("mirrorless cameras");
         mirrorless.setDescription("Mirrorless cameras for professional and personal use, offering high performance.");
         mirrorless.setImage("https://example.com/mirrorless_image.png");
         mirrorless.setActive(true);
         mirrorless.setDeleted(false);
         mirrorless.setEditable(true);
         mirrorless.setVisible(true);
+        mirrorless.setStatus(1);
         mirrorless.setBrand(sonyBrand);  // Gán Brand Sony cho Category Mirrorless
         mirrorless.setCreatedBy("ADMIN");
         mirrorless.setUpdatedBy("ADMIN");
@@ -248,12 +253,14 @@ public class DataLoader implements CommandLineRunner {
         // Thêm danh mục cho Nikon
         Category dslr = new Category();
         dslr.setName("DSLR Cameras");
+        dslr.setSlug("dslr cameras");
         dslr.setDescription("DSLR cameras, offering high-quality photography with advanced features.");
         dslr.setImage("https://example.com/dslr_image.png");
         dslr.setActive(true);
         dslr.setDeleted(false);
         dslr.setEditable(true);
         dslr.setVisible(true);
+        dslr.setStatus(1);
         dslr.setBrand(nikonBrand);  // Gán Brand Nikon cho Category DSLR
         dslr.setCreatedBy("ADMIN");
         dslr.setUpdatedBy("ADMIN");
@@ -262,12 +269,14 @@ public class DataLoader implements CommandLineRunner {
         // Thêm danh mục cho Fujifilm
         Category instant = new Category();
         instant.setName("Instant Cameras");
+        instant.setSlug("instant cameras");
         instant.setDescription("Instant cameras for fun, instant photo printing.");
         instant.setImage("https://example.com/instant_image.png");
         instant.setActive(true);
         instant.setDeleted(false);
         instant.setEditable(true);
         instant.setVisible(true);
+        instant.setStatus(1);
         instant.setBrand(fujifilmBrand);  // Gán Brand Fujifilm cho Category Instant Cameras
         instant.setCreatedBy("ADMIN");
         instant.setUpdatedBy("ADMIN");
@@ -276,12 +285,14 @@ public class DataLoader implements CommandLineRunner {
         // Thêm danh mục cho Panasonic
         Category camcorders = new Category();
         camcorders.setName("Camcorders");
+        camcorders.setSlug("camcorders");
         camcorders.setDescription("High-definition camcorders for video recording and filmmaking.");
         camcorders.setImage("https://example.com/camcorders_image.png");
         camcorders.setActive(true);
         camcorders.setDeleted(false);
         camcorders.setEditable(true);
         camcorders.setVisible(true);
+        camcorders.setStatus(1);
         camcorders.setBrand(panasonicBrand);  // Gán Brand Panasonic cho Category Camcorders
         camcorders.setCreatedBy("ADMIN");
         camcorders.setUpdatedBy("ADMIN");
@@ -307,6 +318,7 @@ public class DataLoader implements CommandLineRunner {
             product.setSellPrice(3000.0 * i);
             product.setQuantity(50.0 * i);
             product.setSoldQuantity(10.0 * i);
+            product.setStatus(1);
             product.setCategories(getCameraCategories(categories));
             productRepository.save(product);  // Lưu sản phẩm vào cơ sở dữ liệu
         });

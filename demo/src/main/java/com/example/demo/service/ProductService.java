@@ -4,6 +4,8 @@ import com.example.demo.dto.ProductDTO;
 import com.example.demo.dto.response.ProductResponse;
 import com.example.demo.entity.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Set;
 
@@ -20,5 +22,7 @@ public interface ProductService {
     Page<ProductDTO> filterProductsByCategoryNative(Set<Long> categoryIds, int page, int size, String sortBy, String direction);
     Page<ProductDTO> filterProductsByCategoryAndPriceNative(Set<Long> categoryIds, double minPrice, double maxPrice, int page, int size, String sortBy, String direction);
     List<Product> add(List<Product> products);
+    public Page<ProductResponse> getAll(Double sellPrice, Integer status, Integer page, Integer size);
+    public Page<ProductResponse> getAllByCategorySlug(String slug,Double sellPrice, Integer status, Integer page, Integer size);
 
 }

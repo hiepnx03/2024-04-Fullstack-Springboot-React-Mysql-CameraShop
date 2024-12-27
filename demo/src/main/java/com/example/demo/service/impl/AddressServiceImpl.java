@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.dto.AddressDTO;
 import com.example.demo.entity.Address;
@@ -6,6 +6,7 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.AddressRepository;
 import com.example.demo.converter.AddressConverter;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

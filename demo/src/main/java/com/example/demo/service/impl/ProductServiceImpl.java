@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.converter.ImageConverter;
 import com.example.demo.converter.ProductConverter;
@@ -10,6 +10,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ImageRepository;
 import com.example.demo.repository.ProductRepository;
+import com.example.demo.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Page;
@@ -200,7 +201,24 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public Page<ProductResponse> getAll(Double sellPrice, Integer status, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (status == null) {
+            return productConverter.convertToResponse(productRepository.findAllBySellPriceLessThanEqual(sellPrice, pageable));
+        }
+        return productConverter.convertToResponse(productRepository.findAllBySellPriceLessThanEqualAndStatus(sellPrice, status, pageable));
+    }
 
+    @Override
+    public Page<ProductResponse> getAllByCategorySlug(String slug, Double sellPrice, Integer status, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (status == null) {
+            return productConverter.convertToResponse(productRepository.findAllByCategoriesSlugAndSellPriceLessThanEqual(slug, sellPrice, pageable));
+        }
+        return productConverter.convertToResponse(productRepository.findAllByCategoriesSlugAndSellPriceLessThanEqualAndStatus(slug, sellPrice, status, pageable));
+
+    }
 
     @Override
     public boolean deleteProduct(Long id) {

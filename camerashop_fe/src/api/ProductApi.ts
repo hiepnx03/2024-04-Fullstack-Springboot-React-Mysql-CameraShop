@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URL } from '../layouts/utils/Constant';
+import {BASE_URL} from '../layouts/utils/Constant';
 import ProductModel from "../model/ProductModel";
 
 // Lấy tất cả sản phẩm

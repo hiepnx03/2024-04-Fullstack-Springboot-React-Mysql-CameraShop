@@ -1,7 +1,9 @@
 package com.example.demo.controller.admin;
 
 import com.example.demo.dto.CategoryDTO;
+import com.example.demo.dto.PageDTO;
 import com.example.demo.entity.Category;
+import com.example.demo.entity.EStatus;
 import com.example.demo.entity.ResponseObject;
 import com.example.demo.service.CategoryService;
 import lombok.AllArgsConstructor;
@@ -11,26 +13,53 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 import com.example.demo.exception.EntityNotFoundException;
 
 
 @RestController
 @RequestMapping("/admin/categories")
 @AllArgsConstructor
-public class CategoryController {
+public class CategoryManagerController {
     private final CategoryService categoryService;
 
-    @GetMapping
-    public ResponseEntity<ResponseObject> getAllCategories() {
+    @GetMapping("/all")
+    public ResponseEntity<ResponseObject> getAll(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                 @RequestParam(name = "size", defaultValue = "20") int size) {
         try {
-            List<CategoryDTO> categories = categoryService.findAll();
-            ResponseObject responseObject = new ResponseObject("ok", "Categories retrieved successfully", categories);
-            return ResponseEntity.ok(responseObject);
+            Page<CategoryDTO> categoryDTOS = categoryService.getAll(EStatus.ACTIVE.getName(), page, size);
+            return ResponseEntity.ok().body(new ResponseObject("ok", "Get categories successful!", categoryDTOS));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Categories not found", null));
         } catch (Exception e) {
-            ResponseObject errorResponse = new ResponseObject("error", "Failed to retrieve categories: " + e.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            return ResponseEntity.badRequest().body(new ResponseObject("failed", e.getMessage(), null));
         }
     }
+
+//    @GetMapping("/all")
+//    public ResponseEntity<ResponseObject> getAll(@RequestParam(name = "page", defaultValue = "0") int page,
+//                                                 @RequestParam(name = "size", defaultValue = "20") int size) {
+//        try {
+//            Page<CategoryDTO> categoryDTOS = categoryService.getAll(EStatus.ACTIVE.getName(), page, size);
+//            PageDTO<CategoryDTO> response = new PageDTO<>(categoryDTOS);
+//            return ResponseEntity.ok().body(new ResponseObject("ok", "Get categories successful!", response));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(new ResponseObject("failed", e.getMessage(), ""));
+//        }
+//    }
+
+
+//    @GetMapping
+//    public ResponseEntity<ResponseObject> getAllCategories() {
+//        try {
+//            List<CategoryDTO> categories = categoryService.findAll();
+//            ResponseObject responseObject = new ResponseObject("ok", "Categories retrieved successfully", categories);
+//            return ResponseEntity.ok(responseObject);
+//        } catch (Exception e) {
+//            ResponseObject errorResponse = new ResponseObject("error", "Failed to retrieve categories: " + e.getMessage(), null);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+//        }
+//    }
 
 
     @GetMapping("/{id}")
@@ -63,7 +92,6 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
-
 
 
     @PutMapping("/{id}")

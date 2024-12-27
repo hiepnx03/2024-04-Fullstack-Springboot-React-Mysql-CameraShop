@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 
 import com.example.demo.converter.CategoryConverter;
@@ -9,7 +9,7 @@ import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductRepository;
-import lombok.AllArgsConstructor;
+import com.example.demo.service.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,14 +47,14 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDTO> findAll() {
         List<Category> categories = categoryRepository.findAllCategoriesWithProducts(); // Ensure products are fetched eagerly
         return categories.stream()
-                .map(categoryConverter::convertToDTO)
+                .map(categoryConverter::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public CategoryDTO findById(Long id) {
         return categoryRepository.findById(id)
-                .map(categoryConverter::convertToDTO)
+                .map(categoryConverter::convertToDto)
                 .orElse(null);  // Hoặc có thể trả về ResponseEntity hoặc Exception nếu không tìm thấy
     }
 
@@ -73,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category savedCategory = categoryRepository.save(category);
 
         // Convert the saved entity back to DTO and return
-        return categoryConverter.convertToDTO(savedCategory);
+        return categoryConverter.convertToDto(savedCategory);
     }
 
     @Override
@@ -82,6 +82,15 @@ public class CategoryServiceImpl implements CategoryService {
         return products.stream()
                 .map(productConverter::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<CategoryDTO> getAll(Integer status,Integer page,Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        if(status==null){
+            return categoryConverter.convertToDTO(categoryRepository.findAll(pageable));
+        }
+        return categoryConverter.convertToDTO(categoryRepository.findAllByStatus(status,pageable));
     }
 
     @Override
@@ -110,7 +119,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category updatedCategory = categoryRepository.save(existingCategory);
 
         // Convert the updated entity back to DTO and return
-        return categoryConverter.convertToDTO(updatedCategory);
+        return categoryConverter.convertToDto(updatedCategory);
     }
 
     @Override

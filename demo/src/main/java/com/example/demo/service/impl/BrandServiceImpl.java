@@ -1,11 +1,10 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.dto.BrandDTO;
 import com.example.demo.entity.Brand;
 import com.example.demo.repository.BrandRepository;
 import com.example.demo.service.BrandService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

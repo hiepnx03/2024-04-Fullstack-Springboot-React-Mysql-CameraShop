@@ -1,9 +1,10 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.PasswordHistory;
 import com.example.demo.entity.User;
 import com.example.demo.repository.PasswordHistoryRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.PasswordHistoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

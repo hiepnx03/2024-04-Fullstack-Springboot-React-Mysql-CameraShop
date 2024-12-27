@@ -1,6 +1,8 @@
 package com.example.demo.controller.admin;
 
 import com.example.demo.dto.ProductDTO;
+import com.example.demo.dto.response.ProductResponse;
+import com.example.demo.entity.EStatus;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ResponseObject;
 import com.example.demo.service.ProductService;
@@ -11,13 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/products")
 @AllArgsConstructor
-public class ProductController {
+public class ProductManagerController {
     private final ProductService productService;
 
     @GetMapping
@@ -31,6 +32,39 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<ResponseObject> getAllByCategorySlugAndPrice(
+            @RequestParam(name = "categorySlug", required = false) String slug,
+            @RequestParam(name = "sellPrice", required = false) Double sellPrice,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        try {
+            Page<ProductResponse> products;
+
+            // Nếu slug là null hoặc "all"
+            if (slug == null || slug.equalsIgnoreCase("null") || slug.equalsIgnoreCase("all")) {
+                products = productService.getAll(sellPrice, EStatus.ACTIVE.getName(), page, size);
+            } else {
+                products = productService.getAllByCategorySlug(slug, sellPrice, EStatus.ACTIVE.getName(), page, size);
+            }
+
+//            if (slug == null || slug.trim().isEmpty() || slug.equalsIgnoreCase("all")) {
+//                products = productService.getAll(sellPrice, EStatus.ACTIVE.getName(), page, size);
+//            } else {
+//                products = productService.getAllByCategorySlug(slug, sellPrice, EStatus.ACTIVE.getName(), page, size);
+//            }
+
+
+            return ResponseEntity.ok().body(new ResponseObject("ok", "Get product successful!", products));
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ResponseObject("failed", e.getMessage(), ""));
+        }
+    }
+
+
 
 
     // Lấy sản phẩm theo ID

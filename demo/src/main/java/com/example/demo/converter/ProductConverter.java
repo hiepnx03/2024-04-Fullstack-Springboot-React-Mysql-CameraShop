@@ -1,7 +1,9 @@
 package com.example.demo.converter;
 
+import com.example.demo.dto.CategoryDTO;
 import com.example.demo.dto.ImageDTO;
 import com.example.demo.dto.ProductDTO;
+import com.example.demo.dto.response.CategoryResponse;
 import com.example.demo.dto.response.ProductResponse;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Image;
@@ -9,6 +11,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -85,14 +88,42 @@ public class ProductConverter {
         }).collect(Collectors.toSet());
     }
 
-
     public ProductResponse convertToResponse(Product product) {
         ProductResponse productResponse = modelMapper.map(product, ProductResponse.class);
-        if(product.getImages()!=null&&product.getImages().size()>0){
-            ImageDTO imageDTO = modelMapper.map(product.getImages().getClass(), ImageDTO.class);
+//        if(product.getImages()!=null&&product.getImages().size()>0){
+//            ImageDTO imageDTO = modelMapper.map(product.getImages().getClass(), ImageDTO.class);
+//            productResponse.setImage(imageDTO);
+//        }
+
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            // Lấy hình ảnh đầu tiên (hoặc có thể tùy chỉnh logic này)
+            Image firstImage = product.getImages().iterator().next();
+            ImageDTO imageDTO = modelMapper.map(firstImage, ImageDTO.class);
             productResponse.setImage(imageDTO);
+        } else {
+            // Trả về hình ảnh mặc định hoặc null nếu không có hình ảnh
+            productResponse.setImage(new ImageDTO(null,"default_images.jpg", 1L));
         }
+
+
+
+        if (product.getCategories() != null && !product.getCategories().isEmpty()) {
+            // Lấy hình ảnh đầu tiên (hoặc theo logic khác nếu cần)
+            Category category = product.getCategories().iterator().next();
+            CategoryDTO categoryDTO = modelMapper.map(category, CategoryDTO.class);
+            productResponse.setCategory(categoryDTO);
+        }
+
+
+
         return productResponse;
+    }
+
+    public Page<ProductResponse> convertToResponse(Page<Product> pageEntity) {
+        if (pageEntity == null) {
+            return null;
+        }
+        return pageEntity.map(this::convertToResponse);
     }
 
 }

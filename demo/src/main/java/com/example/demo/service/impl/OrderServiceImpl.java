@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 
 import com.example.demo.converter.OrderDetailConverter;
@@ -10,6 +10,10 @@ import com.example.demo.entity.*;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.ShippingStatusRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.OrderService;
+import com.example.demo.service.ProductService;
+import com.example.demo.service.ShippingStatusService;
+import com.example.demo.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -39,6 +39,8 @@ public class Product extends Base<String> implements Serializable {
     @Min(value = 0, message = "Sold quantity must be greater than or equal to 0")
     private Double soldQuantity;
 
+    private Integer status;
+    private String slug;
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "product_category",

@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/brands")
 @RequiredArgsConstructor
-public class BrandController {
+public class BrandManagerController {
 
     private final BrandService brandService;
 

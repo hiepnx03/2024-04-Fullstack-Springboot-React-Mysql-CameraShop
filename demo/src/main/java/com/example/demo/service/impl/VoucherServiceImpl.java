@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.dto.VoucherDTO;
 import com.example.demo.dto.request.ApplyVoucherRequest;
