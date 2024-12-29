@@ -22,6 +22,8 @@ public class Product extends Base<String> implements Serializable {
     @Column(nullable = false)
     private String name;
 
+//    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
     @Min(value = 0, message = "Import price must be greater than or equal to 0")

@@ -5,11 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Random;
 
 @Configuration
 public class VNPayConfig {
@@ -25,6 +22,7 @@ public class VNPayConfig {
     public static String secretKey;
     @Value("${vnp.api-url}")
     public static String vnp_ApiUrl;
+
 
     public static String hmacSHA512(final String key, final String data) {
         try {

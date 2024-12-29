@@ -1,79 +1,96 @@
 package com.example.demo.util;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
 
-    private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    @Value("${jwt.secret}")
+    private String secretKeyString; // Khóa bí mật từ file cấu hình
 
-    // Tạo token
-    public String generateToken(String username, List<String> roles) {
-        // Claims có thể để trống hoặc thêm dữ liệu nếu cần
-        Map<String, Object> claims = Map.of("roles", roles); // Thêm roles vào claims
+    private SecretKey getSecretKey() {
+        // Chuyển chuỗi bí mật thành SecretKey
+        return Keys.hmacShaKeyFor(secretKeyString.getBytes());
+    }
 
-        // Tính toán thời gian hết hạn (3 phút sau thời gian hiện tại)
-        Date expirationDate = new Date(System.currentTimeMillis() + 1000 * 60 * 3); // 3 phút
-
-        // Xây dựng token
-        return Jwts.builder()
-                .setClaims(claims)  // Thêm claims vào token (nếu cần)
-                .setSubject(username)  // Đặt username làm subject của token
-                .setIssuedAt(new Date())  // Đặt thời gian cấp phát token
-                .setExpiration(expirationDate)  // Đặt thời gian hết hạn token
-                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)  // Sử dụng khóa bí mật để ký JWT
-                .compact();  // Tạo token cuối cùng
+    public Claims parseToken(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSecretKey())  // Sử dụng SecretKey từ getSecretKey()
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new JwtException("Token has expired at " + e.getClaims().getExpiration(), e);
+        } catch (UnsupportedJwtException e) {
+            throw new JwtException("Unsupported JWT token: " + token, e);
+        } catch (MalformedJwtException e) {
+            throw new JwtException("Malformed JWT token, please check the token structure", e);
+        } catch (SignatureException e) {
+            throw new JwtException("Invalid JWT signature, signature mismatch", e);
+        } catch (IllegalArgumentException e) {
+            throw new JwtException("Token is empty or null", e);
+        }
     }
 
 
-    // Phương thức trích xuất username từ token
+
+    // Tạo token
+    public String generateToken(String username, List<String> roles) {
+        Map<String, Object> claims = Map.of("roles", roles);
+
+        Date expirationDate = new Date(System.currentTimeMillis() + 1000 * 60 * 3);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(expirationDate)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256) // Sử dụng SecretKey
+                .compact();
+    }
+
+
+    // Trích xuất username từ token
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    // Phương thức trích xuất tất cả claims từ token
+    // Trích xuất tất cả claims từ token
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(getSecretKey()) // Sử dụng SecretKey
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    // Phương thức kiểm tra token có hợp lệ hay không
+    // Kiểm tra token có hợp lệ hay không
     public boolean validateToken(String token, String username) {
         String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
 
-    // Phương thức kiểm tra token hết hạn chưa
+    // Kiểm tra token hết hạn chưa
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    // Phương thức trích xuất thời gian hết hạn từ token
+    // Trích xuất thời gian hết hạn từ token
     private Date extractExpiration(String token) {
         return extractAllClaims(token).getExpiration();
     }
 
-    // Phương thức trích xuất roles từ token
+    // Trích xuất roles từ token
     public List<String> extractRoles(String token) {
         Claims claims = extractAllClaims(token);
-
-        // Tránh lỗi NullPointerException nếu claim "roles" không tồn tại
         List<String> roles = claims.get("roles", List.class);
-        if (roles == null) {
-            roles = new ArrayList<>();  // Trả về danh sách rỗng nếu không có roles
-        }
-
-        return roles;
+        return roles != null ? roles : new ArrayList<>();
     }
 }

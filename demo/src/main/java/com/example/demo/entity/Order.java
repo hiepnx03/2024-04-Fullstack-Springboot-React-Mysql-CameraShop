@@ -19,6 +19,8 @@ import java.util.List;
 public class Order extends Base<String> implements Serializable {
     private Long shippingCost;
     private Long total;
+
+    @Column(columnDefinition = "NVARCHAR(MAX)")
     private String description;
     private String address;
     private String phone;

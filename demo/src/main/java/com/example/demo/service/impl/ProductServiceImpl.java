@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -222,12 +223,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean deleteProduct(Long id) {
-        if (productRepository.existsById(id)) {
-            productRepository.deleteById(id);
-            return true;  // Indicate the product was deleted successfully
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            product.setStatus(0); // Set status to 0 instead of deleting
+            productRepository.save(product); // Save the updated product
+            return true; // Indicate the product status was updated successfully
         }
-        return false;  // Indicate the product was not found
+        return false; // Indicate the product was not found
     }
+
 
     public ProductResponse getById(Long id) {
         try {

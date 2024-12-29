@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.converter.UserConverter;
-import com.example.demo.dto.LoginDTO;
+import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.entity.ERole;
@@ -127,8 +127,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Map<String, String> login(LoginDTO loginDTO) {
-        User user = userRepository.findByUserName(loginDTO.getUsername());
+    public Map<String, String> login(LoginRequest loginRequest) {
+        User user = userRepository.findByUserName(loginRequest.getUsername());
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // Kiểm tra mật khẩu
-        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             user.setFailedAttempt(user.getFailedAttempt() + 1);
             // Cập nhật thời gian đăng nhập sai cuối cùng
             user.setLastFailedAttemptTime(new Date());
@@ -189,11 +189,21 @@ public class UserServiceImpl implements UserService {
         user.setLastFailedAttemptTime(null); // Reset thời gian đăng nhập sai khi đăng nhập thành công
         userRepository.save(user);
 
+        // Tạo accessToken và refreshToken
         List<String> roleName = user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
         String accessToken = jwtUtils.generateToken(user.getUserName(), roleName);
-        return Map.of("access_token", accessToken);
+
+        String refreshToken = UUID.randomUUID().toString(); // Tạo refreshToken mới
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        // Trả về cả accessToken và refreshToken
+        return Map.of(
+                "access_token", accessToken,
+                "refresh_token", refreshToken
+        );
     }
 
 
@@ -335,32 +345,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String refreshToken(String refreshToken) {
-        // Validate the refresh token
+        // Validate refresh token
         if (refreshToken == null || refreshToken.isEmpty()) {
             throw new IllegalArgumentException("Refresh token is required");
         }
 
         // Extract username from the refresh token
-        String username = jwtUtils.extractUsername(refreshToken);
-
-        // Find user by username
-        User user = userRepository.findByUserName(username);
-        if (user == null || !refreshToken.equals(user.getRefreshToken())) {
+        String username;
+        try {
+            username = jwtUtils.extractUsername(refreshToken);
+        } catch (Exception e) {
             throw new IllegalArgumentException("Invalid refresh token");
         }
 
-        // Check if the refresh token is expired
+        // Find user by username
+        User user = userRepository.findByUserName(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        // Validate the refresh token stored in database
+        if (!refreshToken.equals(user.getRefreshToken())) {
+            throw new IllegalArgumentException("Refresh token mismatch");
+        }
+
+        // Check if refresh token is expired
         if (jwtUtils.isTokenExpired(refreshToken)) {
             throw new IllegalArgumentException("Refresh token has expired");
         }
 
-        // Generate a new access token
-        var userDetails = userDetailsService.loadUserByUsername(username);
+        // Generate new access token
         List<String> roles = user.getRoles().stream()
                 .map(Role::getName)
                 .toList();
-
-        // Trả về token mới
         return jwtUtils.generateToken(username, roles);
     }
 

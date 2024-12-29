@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.config.ServerConfig;
-import com.example.demo.dto.LoginDTO;
+import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.dto.request.ResetPasswordRequest;
 import com.example.demo.entity.ResponseObject;
@@ -11,7 +10,6 @@ import com.example.demo.util.TokenBlacklist;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +31,9 @@ public class AuthenticationController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            Map<String, String> tokens = userService.login(loginDTO);
+            Map<String, String> tokens = userService.login(loginRequest);
             System.out.println("Thành công: " + tokens);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Login successful", tokens));
         } catch (RuntimeException e) {
@@ -50,10 +48,22 @@ public class AuthenticationController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
-        String refreshToken = request.get("refreshToken");
-        String newAccessToken = userService.refreshToken(refreshToken);
-        return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+        try {
+            // Lấy refresh token từ request body
+            String refreshToken = request.get("refreshToken");
+
+            // Gọi service để làm mới token
+            String newAccessToken = userService.refreshToken(refreshToken);
+
+            // Trả về access token mới
+            return ResponseEntity.ok(new ResponseObject("ok", "Token refreshed successfully", Map.of("access_token", newAccessToken)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ResponseObject("failed", e.getMessage(), ""));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseObject("failed", "An error occurred", ""));
+        }
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader) {

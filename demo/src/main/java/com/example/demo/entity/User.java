@@ -33,11 +33,11 @@ public class User extends Base<String> implements Serializable {
     private String password;
 
     @NotBlank(message = "First name is required")
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50,columnDefinition = "NVARCHAR(50)")
     private String firstName;
 
     @NotBlank(message = "Last name is required")
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50,columnDefinition = "NVARCHAR(50)")
     private String lastName;
 
     private String phone;

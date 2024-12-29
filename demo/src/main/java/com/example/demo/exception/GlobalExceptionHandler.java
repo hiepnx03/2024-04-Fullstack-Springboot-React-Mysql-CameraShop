@@ -1,6 +1,8 @@
 package com.example.demo.exception;
 
 import com.example.demo.entity.ResponseObject;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
@@ -50,4 +52,18 @@ public class GlobalExceptionHandler extends RuntimeException {
         String errorMessage = ex.getBindingResult().getAllErrors().toString();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation failed: " + errorMessage);
     }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ResponseObject> handleJwtException(JwtException ex) {
+        // Xử lý ngoại lệ JWT
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ResponseObject("error", "JWT error: " + ex.getMessage(), null));
+    }
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ResponseObject> handleJwtSignatureException(SignatureException ex) {
+        // Trả về mã lỗi 401 (Unauthorized) với thông báo lỗi
+        ResponseObject response = new ResponseObject("error", "Invalid JWT signature: " + ex.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
 }

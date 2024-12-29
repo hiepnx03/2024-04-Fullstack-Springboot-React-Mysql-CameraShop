@@ -6,12 +6,14 @@ import com.example.demo.entity.EStatus;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ResponseObject;
 import com.example.demo.service.ProductService;
+import io.jsonwebtoken.JwtException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.SignatureException;
 import java.util.List;
 import java.util.Set;
 
@@ -106,20 +108,47 @@ public class ProductManagerController {
         }
     }
 
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<ResponseObject> deleteProduct(@PathVariable Long id) {
+//        try {
+//            boolean isDeleted = productService.deleteProduct(id);
+//            if (!isDeleted) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                        .body(new ResponseObject("error", "Product with ID " + id + " not found", null));
+//            }
+//            return ResponseEntity.noContent().build();
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(new ResponseObject("error", "Failed to delete product: " + e.getMessage(), null));
+//        }
+//    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseObject> deleteProduct(@PathVariable Long id) {
         try {
             boolean isDeleted = productService.deleteProduct(id);
+
             if (!isDeleted) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ResponseObject("error", "Product with ID " + id + " not found", null));
             }
-            return ResponseEntity.noContent().build();
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject("success", "Product status set to 0", null));
+
+        } catch (JwtException ex) {
+            // Xử lý tất cả các lỗi JWT trong cùng một khối
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseObject("error", "JWT error: " + ex.getMessage(), null));
         } catch (Exception e) {
+            // Xử lý tất cả các lỗi khác
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseObject("error", "Failed to delete product: " + e.getMessage(), null));
+                    .body(new ResponseObject("error", "Failed to update product status: " + e.getMessage(), null));
         }
     }
+
+
+
 
     @GetMapping("/search")
     public Page<ProductDTO> searchProductsByName(
