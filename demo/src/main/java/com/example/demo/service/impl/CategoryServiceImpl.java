@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public List<CategoryDTO> findAll() {
-        List<Category> categories = categoryRepository.findAllCategoriesWithProducts(); // Ensure products are fetched eagerly
+        List<Category> categories = categoryRepository.findAll(); // Ensure products are fetched eagerly
         return categories.stream()
                 .map(categoryConverter::convertToDto)
                 .collect(Collectors.toList());

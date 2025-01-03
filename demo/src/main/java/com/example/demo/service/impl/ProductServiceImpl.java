@@ -59,6 +59,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCategories(categories);
         }
 
+        product.setStatus(1);
         // Lưu sản phẩm
         product = productRepository.save(product);
 
@@ -100,6 +101,64 @@ public class ProductServiceImpl implements ProductService {
 
         return productConverter.toDTO(product);
     }
+
+
+    @Override
+    @Transactional
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+        // Kiểm tra xem sản phẩm có tồn tại trong cơ sở dữ liệu hay không
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product with ID " + id + " does not exist"));
+
+        // Cập nhật thông tin sản phẩm từ DTO
+        existingProduct.setName(productDTO.getName());
+        existingProduct.setDescription(productDTO.getDescription());
+        existingProduct.setSellPrice(productDTO.getSellPrice());
+        existingProduct.setStatus(productDTO.getStatus());  // Cập nhật status nếu cần
+
+//         Cập nhật các danh mục cho sản phẩm
+        if (productDTO.getCategoryIds() != null) {
+            Set<Category> categories = productDTO.getCategoryIds().stream()
+                    .map(categoryId -> categoryRepository.findById(categoryId)
+                            .orElseThrow(() -> new IllegalArgumentException("Category with ID " + categoryId + " not found")))
+                    .collect(Collectors.toSet());
+            existingProduct.setCategories(categories);
+        }
+
+
+        // Cập nhật ảnh sản phẩm nếu có
+//        if (productDTO.getImages() != null && !productDTO.getImages().isEmpty()) {
+//            // Xóa ảnh cũ nếu có
+//            Set<Image> existingImages = existingProduct.getImages();
+//            if (existingImages != null && !existingImages.isEmpty()) {
+//                // Giả sử bạn muốn xóa tất cả ảnh cũ hoặc tùy thuộc vào logic cụ thể của bạn
+//                imageRepository.deleteAll(existingImages);  // Xóa ảnh cũ khỏi database và thư mục (nếu cần)
+//            }
+//
+//            // Lưu ảnh mới
+//            Set<Image> updatedImages = productDTO.getImages().stream()
+//                    .filter(imageDTO -> isValidURL(imageDTO.getUrl())) // Kiểm tra URL hợp lệ
+//                    .map(imageDTO -> {
+//                        Image image = ImageConverter.toEntity(imageDTO);
+//                        String fileName = saveImageToDirectoryWithUniqueName(imageDTO.getUrl(), Paths.get("uploads/images"));
+//                        image.setProduct(existingProduct);
+//                        image.setUrl(fileName); // Lưu đường dẫn ảnh
+//                        return image;
+//                    })
+//                    .collect(Collectors.toSet());
+//
+//            // Cập nhật ảnh vào sản phẩm
+//            existingProduct.setImages(updatedImages);
+//            imageRepository.saveAll(updatedImages); // Lưu ảnh vào database
+//        }
+
+        // Lưu lại sản phẩm đã cập nhật
+        productRepository.save(existingProduct);
+
+        return productConverter.toDTO(existingProduct);
+    }
+
+
 
     // Phương thức kiểm tra tính hợp lệ của URL
     private boolean isValidURL(String url) {

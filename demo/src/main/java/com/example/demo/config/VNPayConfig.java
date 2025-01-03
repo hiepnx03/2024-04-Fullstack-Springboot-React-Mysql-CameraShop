@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,20 +9,44 @@ import java.nio.charset.StandardCharsets;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+@Data
 @Configuration
 public class VNPayConfig {
 
     // Các cấu hình cơ bản cho VNPay
+//    @Value("${vnp.pay-url}")
+//    public static String vnp_PayUrl;
+//    @Value("${vnp.return-url}")
+//    public static String vnp_ReturnUrl;
+//    @Value("${vnp.merchant-code}")
+//    public static String vnp_TmnCode;
+//    @Value("${vnp.secret-key}")
+//    public static String secretKey;
+//    @Value("${vnp.api-url}")
+//    public static String vnp_ApiUrl;
+
+
     @Value("${vnp.pay-url}")
-    public static String vnp_PayUrl;
+    private String vnpPayUrl;
+
     @Value("${vnp.return-url}")
-    public static String vnp_ReturnUrl;
+    private String vnpReturnUrl;
+
     @Value("${vnp.merchant-code}")
-    public static String vnp_TmnCode;
+    private String vnpTmnCode;
+
     @Value("${vnp.secret-key}")
-    public static String secretKey;
+    private String secretKey;
+
     @Value("${vnp.api-url}")
-    public static String vnp_ApiUrl;
+    private String vnpApiUrl;
+
+    @Value("${vnp.version}")
+    private String vnp_Version;
+
+    @Value("${vnp.command}")
+    private String vnp_Command;
+
 
 
     public static String hmacSHA512(final String key, final String data) {

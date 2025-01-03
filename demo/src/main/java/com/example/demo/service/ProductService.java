@@ -12,6 +12,7 @@ import java.util.Set;
 
 public interface ProductService {
     public ProductDTO addProduct(ProductDTO productDTO);
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO);
     public Product getProductById(Long id);
     public List<ProductDTO> getAllProducts();
     public boolean deleteProduct(Long id);

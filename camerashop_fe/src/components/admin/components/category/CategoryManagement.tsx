@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import CategoryTable from "./components/category/CategoryTable";
-import CategoryForm from "./components/category/CategoryForm";
-import CategoryModel from "../../model/CategoryModel";
-import { getAllCategories, createCategory, updateCategory, deleteCategory } from "../../api/CategoryApi";
+import CategoryTable from "./CategoryTable";
+import CategoryForm from "./CategoryForm";
+import Category from "../../../../model/Category";
+import { getAllCategories, createCategory, updateCategory, deleteCategory } from "../../../../api/CategoryApi";
 
 
 
 const CategoryManagement: React.FC = () => {
-    const [categoryList, setCategoryList] = useState<CategoryModel[]>([]);
+    const [categoryList, setCategoryList] = useState<Category[]>([]);
     const [isAdding, setIsAdding] = useState(false); // Trạng thái để điều khiển sự hiển thị của modal
 
     useEffect(() => {
@@ -25,10 +25,10 @@ const CategoryManagement: React.FC = () => {
     };
 
     // Hàm xử lý khi cần thêm mới danh mục
-    // Thay đổi kiểu đối số của hàm handleAddCategory từ string thành CategoryModel
-    const handleAddCategory = async (newCategory: CategoryModel) => {
+    // Thay đổi kiểu đối số của hàm handleAddCategory từ string thành Category
+    const handleAddCategory = async (newCategory: Category) => {
         try {
-            // Gọi createCategory với đối tượng CategoryModel
+            // Gọi createCategory với đối tượng Category
             await createCategory(newCategory);
             await loadData(); // Sau khi thêm danh mục, cập nhật lại danh sách
             closeModal(); // Đóng modal sau khi thêm danh mục
@@ -41,9 +41,9 @@ const CategoryManagement: React.FC = () => {
 
 
     // Hàm xử lý khi cần cập nhật danh mục
-    const handleUpdateCategory = async (updatedCategory: CategoryModel) => {
+    const handleUpdateCategory = async (updatedCategory: Category) => {
         try {
-            await updateCategory(updatedCategory.idCategory, updatedCategory);
+            await updateCategory(updatedCategory.id, updatedCategory);
             await loadData(); // Sau khi cập nhật danh mục, cập nhật lại danh sách
         } catch (error) {
             console.error('Lỗi khi cập nhật danh mục:', error);

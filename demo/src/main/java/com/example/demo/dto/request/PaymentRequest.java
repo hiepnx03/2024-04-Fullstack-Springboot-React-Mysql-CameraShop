@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentRequest {
-    private String orderId;
-    private long amount; // Amount in VND (in cents, so 10000 is 100.00 VND)
-    private String orderDescription;
-    private String bankCode; // Optional
-    private String language; // Optional
-    private String ipAddress;
+    private long amount; // Số tiền
+    private String bankCode; // Mã ngân hàng (optional)
+    private String ipAddress; // Địa chỉ IP của người dùng
+    private String orderDescription; // Mô tả đơn hàng
+    private String orderType; // Mã danh mục hàng hóa
+    private String returnUrl; // URL thông báo kết quả
 }

@@ -41,6 +41,8 @@ public class ProductDTO {
     @DecimalMin(value = "0.0", inclusive = true, message = "Số lượng đã bán phải lớn hơn hoặc bằng 0.")
     private Double soldQuantity;
 
+    private Integer status;
+
     @NotEmpty(message = "Danh sách ID danh mục không được để trống.")
     private Set<Long> categoryIds; // Danh sách ID của các danh mục
 

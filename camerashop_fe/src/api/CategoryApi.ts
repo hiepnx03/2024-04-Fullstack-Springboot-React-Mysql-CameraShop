@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-import CategoryModel from "../model/CategoryModel";
+import Category from "../model/Category";
 import { ResponseObject } from '../types/ResponseObject';
-import ProductModel from "../model/ProductModel"; // Điều chỉnh đường dẫn cho đúng
+import Product from "../model/Product"; // Điều chỉnh đường dẫn cho đúng
 
 // Địa chỉ cơ sở của API có thể lấy từ biến môi trường để dễ dàng cấu hình
 const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080'; // Địa chỉ cơ sở của API
@@ -22,29 +22,29 @@ function handleError(error: any): void {
     throw error; // Quăng lại lỗi để có thể xử lý ở các phần khác
 }
 
-export async function getAllCategories(): Promise<CategoryModel[]> {
+export async function getAllCategories(page: number = 0, size: number = 20): Promise<Category[]> {
     try {
-        const response = await axios.get(`${BASE_URL}/admin/categories`); // API endpoint đã thay đổi theo controller của bạn
-        const data = response.data;
-        if (!data || !Array.isArray(data.data)) {
-            throw new Error('Dữ liệu sản phẩm không hợp lệ');
+        const response: AxiosResponse<ResponseObject> = await axios.get(
+            `${BASE_URL}/admin/categories/all`,
+            {
+                params: { page, size },
+            }
+        );
+        if (response.data && response.data.status === "ok") {
+            return response.data.data || [];
+        } else {
+            console.warn("Unexpected response format:", response.data);
+            return [];
         }
-
-        return data.data.map((category: any) => ({
-            idCategory: category.id,
-            categoryName: category.name,
-            idProducts: category.products?.map((product: any) => product.id) || [],
-            // idCategoris: product.categories?.map((category: any) => category.id) || [],
-        }))
-
     } catch (error) {
-        console.error('Lỗi khi tải dữ liệu sản phẩm:', error);
-        throw error;
+        handleError(error);
+        return [];
     }
 }
 
 
-export async function createCategory(newCategoryData: CategoryModel): Promise<CategoryModel> {
+
+export async function createCategory(newCategoryData: Category): Promise<Category> {
     try {
         const response: AxiosResponse<ResponseObject> = await axios.post(`${BASE_URL}/admin/categories`, newCategoryData);
 
@@ -60,7 +60,7 @@ export async function createCategory(newCategoryData: CategoryModel): Promise<Ca
 }
 
 
-export async function updateCategory(idCategory: number, updatedCategoryData: CategoryModel): Promise<CategoryModel> {
+export async function updateCategory(idCategory: number, updatedCategoryData: Category): Promise<Category> {
     try {
         const response: AxiosResponse<ResponseObject> = await axios.put(`${BASE_URL}/admin/categories/${idCategory}`, updatedCategoryData);
 

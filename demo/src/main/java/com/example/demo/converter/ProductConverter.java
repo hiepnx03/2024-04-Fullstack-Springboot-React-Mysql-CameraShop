@@ -40,7 +40,7 @@ public class ProductConverter {
         dto.setName(product.getName());
         dto.setDescription(product.getDescription());
 
-
+        dto.setStatus(product.getStatus());
         dto.setImportPrice(product.getImportPrice());
         dto.setListPrice(product.getListPrice());
         dto.setSellPrice(product.getSellPrice());
@@ -68,6 +68,7 @@ public class ProductConverter {
         product.setDescription(dto.getDescription());
         product.setImportPrice(dto.getImportPrice());
         product.setListPrice(dto.getListPrice());
+        product.setStatus(dto.getStatus());
         product.setSellPrice(dto.getSellPrice());
         product.setQuantity(dto.getQuantity());
         product.setSoldQuantity(dto.getSoldQuantity());

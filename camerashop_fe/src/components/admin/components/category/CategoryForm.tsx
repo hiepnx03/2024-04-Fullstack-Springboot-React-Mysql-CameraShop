@@ -1,27 +1,35 @@
 import React, { useState } from 'react';
 import FadeModal from '../../../../layouts/utils/FadeModal';
-import CategoryModel from "../../../../model/CategoryModel";
+import Category from "../../../../model/Category";
 
 interface CategoryFormProps {
-    onSubmit: (newCategory: CategoryModel) => Promise<void>;
+    onSubmit: (newCategory: Category) => Promise<void>;
     isAdd: boolean; // Trạng thái để điều khiển sự hiển thị của modal
     handleClose: () => void; // Hàm để xử lý việc đóng modal
 }
 
 const CategoryForm: React.FC<CategoryFormProps> = ({ onSubmit, isAdd, handleClose }) => {
-    const [newCategoryName, setNewCategoryName] = useState('');
+    const [newCategoryName, setNewCategoryName] = useState<string>('');
 
-    // Thay đổi kiểu đối số của hàm handleSubmit từ string thành CategoryModel
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newCategoryName.trim()) {
             alert('Vui lòng nhập tên danh mục.');
             return;
         }
-        // Tạo một đối tượng CategoryModel mới với categoryName được nhập
-        const newCategory: CategoryModel = {
-            idCategory: 0, // ID có thể tùy chỉnh tùy theo yêu cầu của bạn
-            categoryName: newCategoryName
+        // Create a new Category object
+        const newCategory: Category = {
+            id: 0, // Assuming ID is auto-generated or handled server-side
+            name: newCategoryName,
+            description: '',
+            image: '',
+            active: true,
+            deleted: false,
+            editable: true,
+            visible: true,
+            slug: '',
+            status: 1,
+            products: [],
         };
         try {
             await onSubmit(newCategory);
@@ -31,7 +39,6 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSubmit, isAdd, handleClos
             console.error('Lỗi khi thêm danh mục:', error);
         }
     };
-
 
     return (
         <FadeModal
@@ -69,6 +76,6 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onSubmit, isAdd, handleClos
             </div>
         </FadeModal>
     );
-}
+};
 
 export default CategoryForm;

@@ -1,30 +1,44 @@
 import React, { useState } from 'react';
 import FadeModal from '../../../../layouts/utils/FadeModal';
-import ProductModel from "../../../../model/ProductModel";
+import Product from "../../../../model/Product";
 
 interface ProductFormProps {
-    onSubmit: (newProduct: ProductModel) => void; // Hàm để xử lý việc gửi form
+    onSubmit: (newProduct: Product) => void; // Hàm để xử lý việc gửi form
     isAdd: boolean; // Trạng thái để điều khiển sự hiển thị của modal
     handleClose: () => void; // Hàm để xử lý việc đóng modal
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, isAdd, handleClose }) => {
     // State cho sản phẩm mới được thêm vào
-    const [newProduct, setNewProduct] = useState<ProductModel>({
-        idProduct: 0,
-        productName: '',
+    const [newProduct, setNewProduct] = useState<Product>({
+        id: 0,
+        name: '',
         importPrice: undefined,
         listPrice: undefined,
         sellPrice: undefined,
         description: '',
         quantity: undefined,
         soldQuantity: undefined,
+        categoryIds: [],
+        images: [],
     });
 
     // Xử lý sự kiện khi input thay đổi
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        setNewProduct({ ...newProduct, [name]: value });
+
+        // Convert numeric values to number type or keep undefined if empty
+        if (name === 'importPrice' || name === 'listPrice' || name === 'sellPrice' || name === 'quantity' || name === 'soldQuantity') {
+            setNewProduct({
+                ...newProduct,
+                [name]: value === '' ? undefined : Number(value),
+            });
+        } else {
+            setNewProduct({
+                ...newProduct,
+                [name]: value,
+            });
+        }
     };
 
     // Xử lý việc gửi form
@@ -34,14 +48,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, isAdd, handleClose 
         onSubmit(newProduct);
         // Reset form sau khi gửi
         setNewProduct({
-            idProduct: 0,
-            productName: '',
+            id: 0,
+            name: '',
             importPrice: undefined,
             listPrice: undefined,
             sellPrice: undefined,
             description: '',
             quantity: undefined,
             soldQuantity: undefined,
+            categoryIds: [],
+            images: [],
         });
         // Đóng modal sau khi gửi
         handleClose();
@@ -71,61 +87,110 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, isAdd, handleClose 
                 <form onSubmit={handleSubmit}>
                     {/* Các trường nhập cho thông tin sản phẩm */}
                     <div className="mb-3 row">
-                        <label htmlFor="productName" className="col-sm-3 col-form-label">Tên sản phẩm:</label>
+                        <label htmlFor="name" className="col-sm-3 col-form-label">Tên sản phẩm:</label>
                         <div className="col-sm-9">
-                            <input type="text" className="form-control" id="productName" name="productName"
-                                   value={newProduct.productName}
-                                   onChange={handleChange} placeholder="Tên sản phẩm" required/>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                name="name"
+                                value={newProduct.name}
+                                onChange={handleChange}
+                                placeholder="Tên sản phẩm"
+                                required
+                            />
                         </div>
                     </div>
                     <div className="mb-3 row">
                         <label htmlFor="importPrice" className="col-sm-3 col-form-label">Giá nhập:</label>
                         <div className="col-sm-9">
-                            <input type="number" className="form-control" id="importPrice" name="importPrice"
-                                   value={newProduct.importPrice}
-                                   onChange={handleChange} placeholder="Giá nhập" required/>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="importPrice"
+                                name="importPrice"
+                                value={newProduct.importPrice ?? ''}
+                                onChange={handleChange}
+                                placeholder="Giá nhập"
+                                required
+                            />
                         </div>
                     </div>
                     <div className="mb-3 row">
                         <label htmlFor="listPrice" className="col-sm-3 col-form-label">Giá niêm yết:</label>
                         <div className="col-sm-9">
-                            <input type="number" className="form-control" id="listPrice" name="listPrice"
-                                   value={newProduct.listPrice}
-                                   onChange={handleChange} placeholder="Giá niêm yết" required/>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="listPrice"
+                                name="listPrice"
+                                value={newProduct.listPrice ?? ''}
+                                onChange={handleChange}
+                                placeholder="Giá niêm yết"
+                                required
+                            />
                         </div>
                     </div>
                     <div className="mb-3 row">
                         <label htmlFor="sellPrice" className="col-sm-3 col-form-label">Giá bán:</label>
                         <div className="col-sm-9">
-                            <input type="number" className="form-control" id="sellPrice" name="sellPrice"
-                                   value={newProduct.sellPrice}
-                                   onChange={handleChange} placeholder="Giá bán" required/>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="sellPrice"
+                                name="sellPrice"
+                                value={newProduct.sellPrice ?? ''}
+                                onChange={handleChange}
+                                placeholder="Giá bán"
+                                required
+                            />
                         </div>
                     </div>
                     <div className="mb-3 row">
                         <label htmlFor="description" className="col-sm-3 col-form-label">Mô tả:</label>
                         <div className="col-sm-9">
-                            <input type="text" className="form-control" id="description" name="description"
-                                   value={newProduct.description} onChange={handleChange} placeholder="Mô tả" required/>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="description"
+                                name="description"
+                                value={newProduct.description ?? ''}
+                                onChange={handleChange}
+                                placeholder="Mô tả"
+                                required
+                            />
                         </div>
                     </div>
                     <div className="mb-3 row">
                         <label htmlFor="quantity" className="col-sm-3 col-form-label">Số lượng:</label>
                         <div className="col-sm-9">
-                            <input type="number" className="form-control" id="quantity" name="quantity"
-                                   value={newProduct.quantity}
-                                   onChange={handleChange} placeholder="Số lượng" required/>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="quantity"
+                                name="quantity"
+                                value={newProduct.quantity ?? ''}
+                                onChange={handleChange}
+                                placeholder="Số lượng"
+                                required
+                            />
                         </div>
                     </div>
                     <div className="mb-3 row">
                         <label htmlFor="soldQuantity" className="col-sm-3 col-form-label">Đã bán:</label>
                         <div className="col-sm-9">
-                            <input type="number" className="form-control" id="soldQuantity" name="soldQuantity"
-                                   value={newProduct.soldQuantity} onChange={handleChange} placeholder="Đã bán"
-                                   required/>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="soldQuantity"
+                                name="soldQuantity"
+                                value={newProduct.soldQuantity ?? ''}
+                                onChange={handleChange}
+                                placeholder="Đã bán"
+                                required
+                            />
                         </div>
                     </div>
-
 
                     {/* Nút để gửi form và hủy */}
                     <div className="modal-footer">

@@ -49,17 +49,17 @@ public class CategoryManagerController {
 //    }
 
 
-//    @GetMapping
-//    public ResponseEntity<ResponseObject> getAllCategories() {
-//        try {
-//            List<CategoryDTO> categories = categoryService.findAll();
-//            ResponseObject responseObject = new ResponseObject("ok", "Categories retrieved successfully", categories);
-//            return ResponseEntity.ok(responseObject);
-//        } catch (Exception e) {
-//            ResponseObject errorResponse = new ResponseObject("error", "Failed to retrieve categories: " + e.getMessage(), null);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-//        }
-//    }
+    @GetMapping
+    public ResponseEntity<ResponseObject> getAllCategories() {
+        try {
+            List<CategoryDTO> categories = categoryService.findAll();
+            ResponseObject responseObject = new ResponseObject("ok", "Categories retrieved successfully", categories);
+            return ResponseEntity.ok(responseObject);
+        } catch (Exception e) {
+            ResponseObject errorResponse = new ResponseObject("error", "Failed to retrieve categories: " + e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
 
 
     @GetMapping("/{id}")

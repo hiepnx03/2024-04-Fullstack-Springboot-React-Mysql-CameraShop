@@ -2,6 +2,7 @@ package com.example.demo.filter;
 
 import com.example.demo.util.JwtUtils;
 import com.example.demo.util.TokenBlacklist;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,9 +17,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
     private final JwtUtils jwtUtil;
     private final UserDetailsService userDetailsService;
@@ -36,53 +41,50 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader("Authorization");
 
-        // Kiểm tra nếu header Authorization không có hoặc không bắt đầu bằng "Bearer "
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);  // Tiếp tục lọc yêu cầu mà không xác thực token
+            logger.warn("Missing or invalid Authorization header");
+            filterChain.doFilter(request, response);
             return;
         }
 
         String token = authorizationHeader.substring(7);
 
-        // Kiểm tra nếu token bị blacklist
         if (tokenBlacklist.isTokenBlacklisted(token)) {
+            logger.warn("Token has been revoked: {}", token);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Token has been revoked");
             return;
         }
 
-        String username = jwtUtil.extractUsername(token);
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
+        try {
+            String username = jwtUtil.extractUsername(token);
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 var userDetails = userDetailsService.loadUserByUsername(username);
 
-                // Kiểm tra tính hợp lệ của token và username
                 if (jwtUtil.validateToken(token, userDetails.getUsername())) {
-                    // Lấy roles từ token và đảm bảo không null
                     List<String> roles = jwtUtil.extractRoles(token);
-                    if (roles == null || roles.isEmpty()) {
-                        roles = List.of();  // Tránh NullPointerException, trả về danh sách rỗng nếu không có roles
-                    }
-
-                    // Chuyển roles sang SimpleGrantedAuthority
                     var authorities = roles.stream()
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
 
-                    // Đặt Authentication vào SecurityContext
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
-            } catch (Exception e) {
-                // Xử lý lỗi khi có ngoại lệ trong quá trình xác thực token
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Invalid JWT token: " + e.getMessage());
-                return;
             }
+        } catch (ExpiredJwtException e) {
+            logger.error("JWT token expired: {}", token, e);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("JWT token expired: " + e.getClaims().getExpiration());
+            return;
+        } catch (Exception e) {
+            logger.error("Error validating JWT token: {}", token, e);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid JWT token: " + e.getMessage());
+            return;
         }
 
-        filterChain.doFilter(request, response); // Tiếp tục xử lý yêu cầu
+        filterChain.doFilter(request, response);
     }
-
 }

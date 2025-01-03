@@ -2,6 +2,8 @@ package com.example.demo.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,25 +21,33 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(secretKeyString.getBytes());
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+
     public Claims parseToken(String token) {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(getSecretKey())  // Sử dụng SecretKey từ getSecretKey()
+                    .setSigningKey(getSecretKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
+            logger.error("Token has expired at: {}", e.getClaims().getExpiration(), e);
             throw new JwtException("Token has expired at " + e.getClaims().getExpiration(), e);
         } catch (UnsupportedJwtException e) {
+            logger.error("Unsupported JWT token: {}", token, e);
             throw new JwtException("Unsupported JWT token: " + token, e);
         } catch (MalformedJwtException e) {
+            logger.error("Malformed JWT token: {}", token, e);
             throw new JwtException("Malformed JWT token, please check the token structure", e);
         } catch (SignatureException e) {
+            logger.error("Invalid JWT signature: {}", token, e);
             throw new JwtException("Invalid JWT signature, signature mismatch", e);
         } catch (IllegalArgumentException e) {
+            logger.error("Token is empty or null", e);
             throw new JwtException("Token is empty or null", e);
         }
     }
+
 
 
 

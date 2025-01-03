@@ -11,12 +11,15 @@ import com.example.demo.service.VNPayService;
 import com.example.demo.service.ZaloPayService;
 import com.paypal.api.payments.Links;
 import com.paypal.base.rest.PayPalRESTException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -30,6 +33,17 @@ public class PaymentController {
     private final ZaloPayService zaloPayService;
     private final MomoService momoService;
     private final PayPalService payPalService;
+
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createPayment(HttpServletRequest request, @RequestParam("amount") long amount) {
+        try {
+            String paymentUrl = vnPayService.createPaymentUrl(request, amount);
+            return ResponseEntity.status(HttpStatus.OK).body(paymentUrl);
+        } catch (UnsupportedEncodingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating payment URL");
+        }
+    }
 
     // Phương thức tạo URL thanh toán VNPay
     @PostMapping("/create-vnpay-payment-url")

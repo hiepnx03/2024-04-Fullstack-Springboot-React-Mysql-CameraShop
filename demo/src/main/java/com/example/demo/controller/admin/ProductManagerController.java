@@ -7,12 +7,15 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ResponseObject;
 import com.example.demo.service.ProductService;
 import io.jsonwebtoken.JwtException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.SignatureException;
 import java.util.List;
 import java.util.Set;
@@ -107,6 +110,21 @@ public class ProductManagerController {
                     .body(new ResponseObject("error", "Failed to create product: " + e.getMessage(), null));
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        try {
+            ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Trả về 404 nếu không tìm thấy sản phẩm
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Trả về 400 nếu có lỗi về danh mục
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Trả về 500 nếu có lỗi hệ thống
+        }
+    }
+
 
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<ResponseObject> deleteProduct(@PathVariable Long id) {
