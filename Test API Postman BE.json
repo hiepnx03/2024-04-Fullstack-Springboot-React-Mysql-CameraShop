@@ -1,0 +1,2039 @@
+{
+	"info": {
+		"_postman_id": "15b69ad8-1baf-4bde-a227-f764aa893e75",
+		"name": "camerashop",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Tests\" tab**\n\nTests help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/b5f280a7-4b09-48ec-857f-0a7ed99d7ef8/U2NyZWVuc2hvdCAyMDIzLTAzLTI3IGF0IDkuNDcuMjggUE0ucG5n\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) in \"Tests\" to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28689103"
+	},
+	"item": [
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "ProductController",
+					"item": [
+						{
+							"name": "getAllProducts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getAllCategorySlug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products/all?categorySlug=camcorders&page=0&size=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"all"
+									],
+									"query": [
+										{
+											"key": "categorySlug",
+											"value": "camcorders"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getAllsellPrice",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products/all?categorySlug=camcorders&page=0&size=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"all"
+									],
+									"query": [
+										{
+											"key": "categorySlug",
+											"value": "camcorders"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getProductById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getAllProductsPaged",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products/paged?page=1&size=5&sortBy=name&direction=desc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"paged"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										},
+										{
+											"key": "sortBy",
+											"value": "name"
+										},
+										{
+											"key": "direction",
+											"value": "desc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "searchProductsByName",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products/search?name=A&page=0&size=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"search"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "A"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "filterProductsByCategoryNative",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products/filter-by-category-native?categoryIds=1&page=0&size=5&sortBy=name&direction=asc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"filter-by-category-native"
+									],
+									"query": [
+										{
+											"key": "categoryIds",
+											"value": "1"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										},
+										{
+											"key": "sortBy",
+											"value": "name"
+										},
+										{
+											"key": "direction",
+											"value": "asc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "filterProductsByCategoryAndPriceNative",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products/filter-by-category-and-price-native?categoryIds=2&minPrice=1&maxPrice=30&page=0&size=5&sortBy=price&direction=desc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"filter-by-category-and-price-native"
+									],
+									"query": [
+										{
+											"key": "categoryIds",
+											"value": "2"
+										},
+										{
+											"key": "minPrice",
+											"value": "1"
+										},
+										{
+											"key": "maxPrice",
+											"value": "30"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										},
+										{
+											"key": "sortBy",
+											"value": "price"
+										},
+										{
+											"key": "direction",
+											"value": "desc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "filterProductsByPrice",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products/filter-by-price?minPrice=100000&maxPrice=200000&page=0&size=5&sortBy=price&direction=asc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"filter-by-price"
+									],
+									"query": [
+										{
+											"key": "minPrice",
+											"value": "100000"
+										},
+										{
+											"key": "maxPrice",
+											"value": "200000"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										},
+										{
+											"key": "sortBy",
+											"value": "price"
+										},
+										{
+											"key": "direction",
+											"value": "asc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteProduct",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/products/{1}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"{1}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createProduct",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "2",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"C3\",\r\n    \"description\": \"Mô tả sản phẩm A\",\r\n    \"price\": 100000,\r\n    \"categoryIds\": [\r\n        1\r\n    ],\r\n    \"images\": [\r\n        {\r\n            \"url\": \"https://i1.wp.com/fujixweekly.com/wp-content/uploads/2020/10/52964792290_0916822324_h-1024x683.jpg?strip=info&w=1600&ssl=1\"\r\n        }\r\n    ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/admin/products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateProduct",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "",
+										"value": "2",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"C3\",\r\n    \"description\": \"Mô tả sản phẩm A\",\r\n    \"price\": 100000,\r\n    \"categoryIds\": [\r\n        1\r\n    ],\r\n    \"images\": [\r\n        {\r\n            \"url\": \"https://i1.wp.com/fujixweekly.com/wp-content/uploads/2020/10/52964792290_0916822324_h-1024x683.jpg?strip=info&w=1600&ssl=1\"\r\n        }\r\n    ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/admin/products/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"products",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CategoryController",
+					"item": [
+						{
+							"name": "getAllCategories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getProductById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "searchCategories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/search?keyword=electronics&page=0&size=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"search"
+									],
+									"query": [
+										{
+											"key": "keyword",
+											"value": "electronics"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteCategory",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createCategory",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": 0,\r\n  \"name\": \"123\",\r\n  \"description\": \"123\",\r\n  \"image\": \"\",\r\n  \"active\": false,\r\n  \"deleted\": false,\r\n  \"editable\": false,\r\n  \"visible\": false,\r\n  \"productIds\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/admin/categories",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateCategory",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Sản phẩm A\",\r\n    \"description\": \"Mô tả sản phẩm A\",\r\n    \"price\": 100000,\r\n    \"category\": [\"Category1\"],\r\n    \"images\": [\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/{1}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"{1}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "BrandController",
+					"item": [
+						{
+							"name": "getAllCategories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getProductById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "searchCategories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/search?keyword=electronics&page=0&size=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"search"
+									],
+									"query": [
+										{
+											"key": "keyword",
+											"value": "electronics"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteCategory",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createCategory",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": 0,\r\n  \"name\": \"123\",\r\n  \"description\": \"123\",\r\n  \"image\": \"\",\r\n  \"active\": false,\r\n  \"deleted\": false,\r\n  \"editable\": false,\r\n  \"visible\": false,\r\n  \"productIds\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/admin/categories",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateCategory",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Sản phẩm A\",\r\n    \"description\": \"Mô tả sản phẩm A\",\r\n    \"price\": 100000,\r\n    \"category\": [\"Category1\"],\r\n    \"images\": [\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/{1}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"{1}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "VoucherManagerController",
+					"item": [
+						{
+							"name": "getAllCategories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getProductById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "searchCategories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/search?keyword=electronics&page=0&size=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"search"
+									],
+									"query": [
+										{
+											"key": "keyword",
+											"value": "electronics"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteCategory",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createCategory",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": 0,\r\n  \"name\": \"123\",\r\n  \"description\": \"123\",\r\n  \"image\": \"\",\r\n  \"active\": false,\r\n  \"deleted\": false,\r\n  \"editable\": false,\r\n  \"visible\": false,\r\n  \"productIds\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/admin/categories",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateCategory",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Sản phẩm A\",\r\n    \"description\": \"Mô tả sản phẩm A\",\r\n    \"price\": 100000,\r\n    \"category\": [\"Category1\"],\r\n    \"images\": [\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/admin/categories/{1}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"categories",
+										"{1}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "UserManagerController",
+					"item": [
+						{
+							"name": "Lấy danh sách tất cả các users",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\": \"Math 101\",\r\n  \"studentIds\": []\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8088/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8088",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AnalyticController",
+					"item": [
+						{
+							"name": "revenue",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/analytic/revenue",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"analytic",
+										"revenue"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "revenue-day-month-year-between",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/analytic/revenue/day-month-year-between",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"analytic",
+										"revenue",
+										"day-month-year-between"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "revenue-month-year-between",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/admin/analytic/revenue/month-year-between",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"analytic",
+										"revenue",
+										"month-year-between"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "AddressController",
+			"item": [
+				{
+					"name": "Cập nhật một Address Copy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"street\": \"456 Elm St\",\r\n  \"city\": \"Shelbyville\",\r\n  \"zipCode\": \"54321\",\r\n  \"studentId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/addresses/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"addresses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xóa một Address Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8088/addresses/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"addresses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AuthenticationController",
+			"item": [
+				{
+					"name": "reset-password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"verifyCode\": \"Q3uDOkG7XrBLTxpDWaZLuguVQ2wmwL9BGksVnFaKPpz5koCHScaRqvcXkQdHxqKy\",\r\n  \"password\": \"123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/reset-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"ADMIN\",\r\n  \"password\": \"ADMIN1\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot-password",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Math 101\",\r\n  \"studentIds\": []\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/forgot-password?email=hiepnx03@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"forgot-password"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "hiepnx03@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CartItemController",
+			"item": [
+				{
+					"name": "addCartItem",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"quantity\": 2,\r\n  \"product\": {\r\n    \"id\": 1,\r\n    \"name\": \"Camera 1\",\r\n    \"price\": 3000\r\n  },\r\n  \"userId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCartItem",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"quantity\": 3,\r\n  \"product\": {\r\n    \"id\": 1,\r\n  \"name\": \"Camera 1\",\r\n    \"price\": 9999\r\n  },\r\n  \"userId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCartItems",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"quantity\": 3,\r\n  \"product\": {\r\n    \"id\": 1,\r\n  \"name\": \"Camera 1\",\r\n    \"price\": 9999\r\n  },\r\n  \"userId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCartItemById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"quantity\": 3,\r\n  \"product\": {\r\n    \"id\": 1,\r\n  \"name\": \"Camera 1\",\r\n    \"price\": 9999\r\n  },\r\n  \"userId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart/item/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart",
+								"item",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCartItem",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"quantity\": 3,\r\n  \"product\": {\r\n    \"id\": 1,\r\n  \"name\": \"Camera 1\",\r\n    \"price\": 9999\r\n  },\r\n  \"userId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PaymentController",
+			"item": [
+				{
+					"name": "checkout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\": \"1\",\r\n    \"amount\": 10000,\r\n    \"orderDescription\": \"zxc\",\r\n    \"bankCode\": \"MB\",\r\n    \"language\": \"VN\",\r\n    \"ipAddress\": \"127.0.0.1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout/create-vnpay-payment-url",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"create-vnpay-payment-url"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "amount",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "orderInfo",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "checkout Copy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\": \"1\",\r\n    \"amount\": 10000,\r\n    \"orderDescription\": \"zxc\",\r\n    \"bankCode\": \"MB\",\r\n    \"language\": \"VN\",\r\n    \"ipAddress\": \"127.0.0.1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout/create-vnpay-payment-url",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"create-vnpay-payment-url"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "amount",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "orderInfo",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mẫu",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\": \"1\",\r\n    \"amount\": 10000,\r\n    \"orderInfo\": \"Product Info\",\r\n    \"bankCode\": \"NCB\",\r\n    \"language\": \"Tiếng Việt\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=1806000&vnp_Command=pay&vnp_CurrCode=VND&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderInfo=Thanh+toan+don+hang+%3A5&vnp_OrderType=other&vnp_Version=2.1.0&vnp_ReturnUrl=https%3A%2F%2Fdomainmerchant.vn%2FReturnUrl&vnp_CreateDate=20210801153333&vnp_TmnCode=DEMOV210&vnp_TxnRef=5&vnp_SecureHash=3e0d61a0c0534b2e36680b3f7277743e8784cc4e1d68fa7d276e79c23be7d6318d338b477910a27992f5057bb1582bd44bd82ae8009ffaf6d141219218625c42\n",
+							"protocol": "https",
+							"host": [
+								"sandbox",
+								"vnpayment",
+								"vn"
+							],
+							"path": [
+								"paymentv2",
+								"vpcpay.html"
+							],
+							"query": [
+								{
+									"key": "vnp_Amount",
+									"value": "1806000"
+								},
+								{
+									"key": "vnp_Command",
+									"value": "pay"
+								},
+								{
+									"key": "vnp_CurrCode",
+									"value": "VND"
+								},
+								{
+									"key": "vnp_IpAddr",
+									"value": "127.0.0.1"
+								},
+								{
+									"key": "vnp_Locale",
+									"value": "vn"
+								},
+								{
+									"key": "vnp_OrderInfo",
+									"value": "Thanh+toan+don+hang+%3A5"
+								},
+								{
+									"key": "vnp_OrderType",
+									"value": "other"
+								},
+								{
+									"key": "vnp_ReturnUrl",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "vnp_Version",
+									"value": "2.1.0"
+								},
+								{
+									"key": "orderId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "amount",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "orderInfo",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "vnp_ReturnUrl",
+									"value": "https%3A%2F%2Fdomainmerchant.vn%2FReturnUrl"
+								},
+								{
+									"key": "vnp_CreateDate",
+									"value": "20210801153333"
+								},
+								{
+									"key": "vnp_TmnCode",
+									"value": "DEMOV210"
+								},
+								{
+									"key": "vnp_TxnRef",
+									"value": "5"
+								},
+								{
+									"key": "vnp_SecureHash",
+									"value": "3e0d61a0c0534b2e36680b3f7277743e8784cc4e1d68fa7d276e79c23be7d6318d338b477910a27992f5057bb1582bd44bd82ae8009ffaf6d141219218625c42\n"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mẫu Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\": \"1\",\r\n    \"amount\": 10000,\r\n    \"orderInfo\": \"Product Info\",\r\n    \"bankCode\": \"NCB\",\r\n    \"language\": \"Tiếng Việt\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Command=pay&vnp_CurrCode=VND&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderType=other&vnp_Version=2.1.0&vnp_Amount=1000000&vnp_BankCode=VCB&vnp_OrderInfo=Thanh+toan+don+hang+%3A5&vnp_TmnCode=IYQY62O2&vnp_CreateDate=20250102185741&vnp_ExpireDate=20250102191241&vnp_SecureHash=a65d2833e4d71deaed9b37f4f311affa9bae22136ab7003eac2362e5a1a75abc097c55f6e3c04e183933369f266244e41f1c115c238995abd3b2afbaf4078bec&vnp_TxnRef=66730587",
+							"protocol": "https",
+							"host": [
+								"sandbox",
+								"vnpayment",
+								"vn"
+							],
+							"path": [
+								"paymentv2",
+								"vpcpay.html"
+							],
+							"query": [
+								{
+									"key": "vnp_Command",
+									"value": "pay"
+								},
+								{
+									"key": "vnp_CurrCode",
+									"value": "VND"
+								},
+								{
+									"key": "vnp_IpAddr",
+									"value": "127.0.0.1"
+								},
+								{
+									"key": "vnp_Locale",
+									"value": "vn"
+								},
+								{
+									"key": "vnp_OrderType",
+									"value": "other"
+								},
+								{
+									"key": "vnp_Version",
+									"value": "2.1.0"
+								},
+								{
+									"key": "vnp_Amount",
+									"value": "1000000"
+								},
+								{
+									"key": "vnp_BankCode",
+									"value": "VCB"
+								},
+								{
+									"key": "vnp_OrderInfo",
+									"value": "Thanh+toan+don+hang+%3A5"
+								},
+								{
+									"key": "vnp_TmnCode",
+									"value": "IYQY62O2"
+								},
+								{
+									"key": "vnp_CreateDate",
+									"value": "20250102185741"
+								},
+								{
+									"key": "vnp_ExpireDate",
+									"value": "20250102191241"
+								},
+								{
+									"key": "vnp_SecureHash",
+									"value": "a65d2833e4d71deaed9b37f4f311affa9bae22136ab7003eac2362e5a1a75abc097c55f6e3c04e183933369f266244e41f1c115c238995abd3b2afbaf4078bec"
+								},
+								{
+									"key": "vnp_TxnRef",
+									"value": "66730587"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ordertype\": \"Nạp tiền điện thoại\",\r\n    \"amount\": 10000,\r\n    \"OrderDescription\": \"Product Info\",\r\n    \"bankCode\": \"MBBANK\",\r\n    \"language\": \"vn\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=1000000&vnp_BankCode=MB&vnp_Command=pay&vnp_CreateDate=20241212212327&vnp_CurrCode=VND&vnp_ExpireDate=20241212213827&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderInfo=zxc&vnp_OrderType=other&vnp_SecureHash=bfa1e665ee4dcc51b969eaafa47b3269fab11c2991281665718f59717097b675c0e4c5ede6bdcf29f2ae7368577d90c26cb6cbe2ad79ebbefbbdbd90f6594003&vnp_TmnCode=IYQY62O2&vnp_TxnRef=44976120&vnp_Version=2.1.0",
+							"protocol": "https",
+							"host": [
+								"sandbox",
+								"vnpayment",
+								"vn"
+							],
+							"path": [
+								"paymentv2",
+								"vpcpay.html"
+							],
+							"query": [
+								{
+									"key": "vnp_Amount",
+									"value": "1000000"
+								},
+								{
+									"key": "vnp_BankCode",
+									"value": "MB"
+								},
+								{
+									"key": "vnp_Command",
+									"value": "pay"
+								},
+								{
+									"key": "vnp_CreateDate",
+									"value": "20241212212327"
+								},
+								{
+									"key": "vnp_CurrCode",
+									"value": "VND"
+								},
+								{
+									"key": "vnp_ExpireDate",
+									"value": "20241212213827"
+								},
+								{
+									"key": "vnp_IpAddr",
+									"value": "127.0.0.1"
+								},
+								{
+									"key": "vnp_Locale",
+									"value": "vn"
+								},
+								{
+									"key": "vnp_OrderInfo",
+									"value": "zxc"
+								},
+								{
+									"key": "vnp_OrderType",
+									"value": "other"
+								},
+								{
+									"key": "vnp_SecureHash",
+									"value": "bfa1e665ee4dcc51b969eaafa47b3269fab11c2991281665718f59717097b675c0e4c5ede6bdcf29f2ae7368577d90c26cb6cbe2ad79ebbefbbdbd90f6594003"
+								},
+								{
+									"key": "vnp_TmnCode",
+									"value": "IYQY62O2"
+								},
+								{
+									"key": "vnp_TxnRef",
+									"value": "44976120"
+								},
+								{
+									"key": "vnp_Version",
+									"value": "2.1.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-payment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderId\": \"12345\",\r\n  \"amount\": 100000,\r\n  \"orderInfo\": \"Thanh toán đơn hàng qua MoMo\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout/create-payment-url",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"create-payment-url"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-vnpay-payment-url",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderId\": \"order123\",\r\n  \"amount\": 100000,\r\n  \"orderDescription\": \"Test VNPay payment\",\r\n  \"bankCode\": \"VISA\",\r\n  \"language\": \"vn\",\r\n  \"ipAddress\": \"127.0.0.1\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout/create-vnpay-payment-url",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"create-vnpay-payment-url"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-zalopay-payment-url",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\": \"order123\",\r\n    \"amount\": 100000,\r\n    \"orderInfo\": \"Test ZaloPay payment\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout/create-zalopay-payment-url",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"create-zalopay-payment-url"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-momo-payment-url",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\": \"order123\",\r\n    \"amount\": 100000,\r\n    \"orderInfo\": \"Test MoMo payment\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout/create-momo-payment-url",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"create-momo-payment-url"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-paypal-payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"total\": 100.00,\r\n    \"currency\": \"USD\",\r\n    \"cancelUrl\": \"http://localhost:8080/checkout/paypal-return\",\r\n    \"successUrl\": \"http://localhost:8080/checkout/paypal-return\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout/create-paypal-payment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"create-paypal-payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "vnpay-notify",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"vnp_ResponseCode\": \"00\",\r\n  \"vnp_TxnRef\": \"order123\",\r\n  \"vnp_Amount\": \"100000\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout/vnpay-notify",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"vnpay-notify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "vnpay-return",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/checkout/vnpay-return?orderId=order123&amount=100000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"vnpay-return"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "order123"
+								},
+								{
+									"key": "amount",
+									"value": "100000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "paypal-return",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/checkout/paypal-return?paymentId=EC-XXXXXX&payerId=XXXXXXXX",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout",
+								"paypal-return"
+							],
+							"query": [
+								{
+									"key": "paymentId",
+									"value": "EC-XXXXXX"
+								},
+								{
+									"key": "payerId",
+									"value": "XXXXXXXX"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		}
+	]
+}

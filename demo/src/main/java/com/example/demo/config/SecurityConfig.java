@@ -65,6 +65,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/admin/vouchers/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/admin/vouchers/**").hasAuthority("ADMIN")
 
+
+//                        .requestMatchers(HttpMethod.GET, EndPoint.ADMIN_ENDPOINT).hasAuthority("ADMIN")
+//                        .requestMatchers(HttpMethod.POST, EndPoint.ADMIN_ENDPOINT).hasAuthority("ADMIN")
+//                        .requestMatchers(HttpMethod.PUT, EndPoint.ADMIN_ENDPOINT).hasAuthority("ADMIN")
+//                        .requestMatchers(HttpMethod.DELETE, EndPoint.ADMIN_ENDPOINT).hasAuthority("ADMIN")
+
+
+                        .requestMatchers(HttpMethod.GET, EndPoint.ADMIN_ENDPOINT).permitAll()
+                        .requestMatchers(HttpMethod.POST, EndPoint.ADMIN_ENDPOINT).permitAll()
+                        .requestMatchers(HttpMethod.PUT, EndPoint.ADMIN_ENDPOINT).permitAll()
+                        .requestMatchers(HttpMethod.DELETE, EndPoint.ADMIN_ENDPOINT).permitAll()
+
+
                         .anyRequest().permitAll() // Các yêu cầu khác phải xác thực
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // Thêm JWT Filter

@@ -79,10 +79,10 @@ public class OrderServiceImpl implements OrderService {
             order.setPayment(p);
             orderRepository.save(order);
 
-			List<Product> products =orderDetails.stream().map(e->{
-				Product pro= productService.getProductById(e.getProduct().getId());
-				pro.setQuantity(pro.getQuantity()-e.getQuantity());
-				return pro;
+            List<Product> products =orderDetails.stream().map(e->{
+                Product pro= productService.getProductById(e.getProduct().getId());
+                pro.setQuantity(pro.getQuantity()-e.getQuantity());
+                return pro;
             }).collect(Collectors.toList());
             productService.addProduct((ProductDTO) products);
             return true;

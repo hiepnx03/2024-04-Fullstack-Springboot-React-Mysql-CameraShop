@@ -3,6 +3,7 @@ package com.example.demo.converter;
 import com.example.demo.dto.ImageDTO;
 import com.example.demo.dto.OrderDetailDTO;
 import com.example.demo.dto.request.OrderDetailRequest;
+import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderDetail;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,4 +29,5 @@ public class OrderDetailConverter {
         result.getProduct().setImage(imageDTO);
         return result;
     }
+
 }

@@ -50,4 +50,6 @@ public class EndPoint {
 //    public static final String CATEGORY_API_POST = "/admin/categories/**";
 //    public static final String CATEGORY_API_PUT = "/admin/categories/**";
 //    public static final String CATEGORY_API_DELETE = "/admin/categories/**";
+
+
 }

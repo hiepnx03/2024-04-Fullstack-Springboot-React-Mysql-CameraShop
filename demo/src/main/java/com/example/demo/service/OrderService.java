@@ -16,11 +16,11 @@ public interface OrderService {
 	OrderResponse getById(Long id);
 	OrderResponse updateStatusShipping(Long id,String status);
 	Page<OrderResponse> getAll(Integer page, Integer size);
-//	Page<OrderResponse> filter(OrderSpecification orderSpecification, int page, int size);
+	//	Page<OrderResponse> filter(OrderSpecification orderSpecification, int page, int size);
 	OrderResponse updateShippingStatus(Long id, ShippingStatus shippingStatus);
 	Integer totalOrders();
 	Integer totalOrdersInDay(Date date);
 	Integer getRevenue();
 	Integer getRevenueMonth(Integer i);
-	 List<ShippingStatusStatistical> getStatisticalShippingStatus();
+	List<ShippingStatusStatistical> getStatisticalShippingStatus();
 }

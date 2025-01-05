@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class ShippingStatusServiceImpl implements ShippingStatusService {
     private final ShippingStatusRepository shippingStatusRepository;
 
