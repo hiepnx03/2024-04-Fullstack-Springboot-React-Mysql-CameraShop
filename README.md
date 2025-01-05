@@ -27,3 +27,5 @@ USER chỉ có thể xem
 + chức năng CRUD giỏ hàng
 + chức năng đặt hàng
 + MOMO,ZALOPAY,PAYPAL(BUG)
+
+25-01-06 cập nhật sơ đồ chức năng , API test 
