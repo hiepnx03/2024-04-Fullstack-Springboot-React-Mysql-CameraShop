@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/checkout")
+@RequestMapping("/api/checkout")
 @AllArgsConstructor
 public class PaymentController {
 
