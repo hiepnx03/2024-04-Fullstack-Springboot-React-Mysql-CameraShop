@@ -29,3 +29,6 @@ USER chỉ có thể xem
 + MOMO,ZALOPAY,PAYPAL(BUG)
 
 25-01-06 cập nhật sơ đồ chức năng , API test 
+25-01-14 Swagger
+
+![25-01-14 Swagger-ui-index-html](https://github.com/user-attachments/assets/0d2f5f8c-5de8-423e-9c16-55e5c9068c35)
