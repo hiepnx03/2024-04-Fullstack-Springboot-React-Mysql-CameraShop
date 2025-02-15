@@ -1,93 +1,50 @@
 package com.example.demo.controller;
 
-import com.example.demo.config.VNPayConfig;
-import com.example.demo.dto.request.PaymentRequest;
 import com.example.demo.dto.response.MomoCreatePaymentResponse;
-import com.example.demo.dto.response.VnPayCreatePaymentResponse;
 import com.example.demo.dto.response.ZaloPayCreatePaymentResponse;
-import com.example.demo.service.MomoService;
+import com.example.demo.service.MoMoService;
 import com.example.demo.service.PayPalService;
 import com.example.demo.service.VNPayService;
 import com.example.demo.service.ZaloPayService;
 import com.paypal.api.payments.Links;
 import com.paypal.base.rest.PayPalRESTException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/checkout")
 @AllArgsConstructor
+@Slf4j
 public class PaymentController {
 
     private final VNPayService vnPayService;
     private final ZaloPayService zaloPayService;
-    private final MomoService momoService;
+    private final MoMoService momoService;
     private final PayPalService payPalService;
 
-
+    @Operation(summary = "Create VNPay Payment URL", description = "Generates a VNPay payment URL based on the provided amount.")
+    @ApiResponse(responseCode = "200", description = "Payment URL generated successfully")
+    @ApiResponse(responseCode = "500", description = "Error generating payment URL")
     @PostMapping("/create")
     public ResponseEntity<?> createPayment(HttpServletRequest request, @RequestParam("amount") long amount) {
         try {
             String paymentUrl = vnPayService.createPaymentUrl(request, amount);
             return ResponseEntity.status(HttpStatus.OK).body(paymentUrl);
         } catch (UnsupportedEncodingException e) {
+            log.error("Error generating payment URL", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating payment URL");
         }
     }
 
-    // Phương thức tạo URL thanh toán VNPay
-    @PostMapping("/create-vnpay-payment-url")
-    public ResponseEntity<VnPayCreatePaymentResponse> generateVNPayPaymentUrl(@RequestBody PaymentRequest paymentRequest) {
-        try {
-            // Gọi service để tạo URL thanh toán VNPay
-            String paymentUrl = vnPayService.createPaymentRequest(paymentRequest);
-
-            // Trả về phản hồi chứa URL thanh toán
-            VnPayCreatePaymentResponse response = new VnPayCreatePaymentResponse();
-            response.setPaymentUrl(paymentUrl);
-
-            return ResponseEntity.ok(response);
-        } catch (IOException e) {
-            // Xử lý lỗi nếu có
-            return ResponseEntity.status(500).body(new VnPayCreatePaymentResponse("Error generating payment URL", null));
-        }
-    }
-
-    @PostMapping("/checkout/vnpay-return")
-    public String vnpayReturn(@RequestParam Map<String, String> params) {
-        // Handle the response from VNPay
-        return "vnpay-return";
-    }
-
-    @PostMapping("/checkout/vnpay-notify")
-    public String vnpayNotify(@RequestParam Map<String, String> params) {
-        return "vnpay-notify";
-    }
-
-    @PostMapping("/vnpay-notify")
-    public ResponseEntity<String> handleVNPayNotify(@RequestBody String notificationData) {
-        // Process VNPay callback notification here
-        return ResponseEntity.ok("OK");
-    }
-
-    @GetMapping("/vnpay-return")
-    public String handleVNPayReturn(@RequestParam Map<String, String> params) {
-        // Handle the return data here and display the result to the user
-        return "Payment Result: " + params;
-    }
-
-
-    // Phương thức tạo URL thanh toán ZaloPay
+    @Operation(summary = "Create ZaloPay Payment URL", description = "Generates a ZaloPay payment URL.")
     @PostMapping("/create-zalopay-payment-url")
     public String generateZaloPayPaymentUrl(@RequestParam String orderId,
                                             @RequestParam Long amount,
@@ -96,6 +53,7 @@ public class PaymentController {
         return "Redirecting to ZaloPay: " + response.getOrderUrl();
     }
 
+    @Operation(summary = "Create MoMo Payment URL", description = "Generates a MoMo payment URL.")
     @PostMapping("/create-momo-payment-url")
     public String createMomoPaymentUrl(@RequestParam String orderId,
                                        @RequestParam Long amount,
@@ -104,19 +62,15 @@ public class PaymentController {
         return "Redirecting to MoMo: " + response.getPayUrl();
     }
 
-
-    // Tạo thanh toán PayPal
+    @Operation(summary = "Create PayPal Payment", description = "Generates a PayPal payment link.")
     @PostMapping("/create-paypal-payment")
     public ResponseEntity<String> createPaypalPayment(@RequestParam Double total,
                                                       @RequestParam String currency,
                                                       @RequestParam String cancelUrl,
-                                                      @RequestParam String successUrl)
-    {
+                                                      @RequestParam String successUrl) {
         try {
             com.paypal.api.payments.Payment payment = payPalService.createPayment(total, currency, "paypal", "sale",
                     "Payment description", cancelUrl, successUrl);
-
-            // Chuyển hướng đến URL PayPal
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
                     return ResponseEntity.ok(link.getHref());
@@ -124,19 +78,19 @@ public class PaymentController {
             }
             return ResponseEntity.status(500).body("Error: PayPal approval URL not found.");
         } catch (PayPalRESTException e) {
-            e.printStackTrace();
+            log.error("Error creating PayPal payment", e);
             return ResponseEntity.status(500).body("Error creating PayPal payment.");
         }
     }
 
-    // Xử lý thông báo từ PayPal sau khi thanh toán
+    @Operation(summary = "Handle PayPal Return", description = "Handles the return response from PayPal after payment.")
     @GetMapping("/paypal-return")
     public String paypalReturn(@RequestParam String paymentId, @RequestParam String payerId) {
         try {
             String payment = payPalService.executePayment(paymentId, payerId);
-            return "Payment executed successfully: " + payment.toString();
+            return "Payment executed successfully: " + payment;
         } catch (PayPalRESTException e) {
-            e.printStackTrace();
+            log.error("Error executing PayPal payment", e);
             return "Error executing payment.";
         }
     }

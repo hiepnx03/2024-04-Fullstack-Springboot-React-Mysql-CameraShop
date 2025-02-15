@@ -1,0 +1,3 @@
+thêm readme.md trong dự án spring boot (ở mục demo) vào thời điểm 25-02-15
+thêm @Slf4j, @Operation, @ApiResponse cho các controller
+thêm file export từ postman , (từ Swagger -> json -> format -> import vào postman -> sau đó postman export ra) điều này giúp API từ postman đầy đủ hơn

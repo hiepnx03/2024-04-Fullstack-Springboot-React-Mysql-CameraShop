@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MomoService {
+public class MoMoService {
 
     @Value("${momo.api.url}")
     private String momoApiUrl;
@@ -34,7 +34,7 @@ public class MomoService {
 
     private final RestTemplate restTemplate;
 
-    public MomoService(RestTemplate restTemplate) {
+    public MoMoService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
