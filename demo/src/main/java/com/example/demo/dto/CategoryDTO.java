@@ -37,7 +37,4 @@ public class CategoryDTO {
     private String slug;
     @NotNull(message = "Product IDs cannot be null.")
     private Set<Long> productIds = new HashSet<>(); // Danh sách các sản phẩm không được null
-
-    @NotNull(message = "Brand ID cannot be null.")
-    private Long brandId;  // ID của thương hiệu không được null
 }

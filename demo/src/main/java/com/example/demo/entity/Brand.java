@@ -23,8 +23,11 @@ public class Brand extends Base<String> implements Serializable {
     private boolean active = true; // Trạng thái hoạt động của hãng
     private boolean deleted = false; // Trạng thái xóa (logical delete)
 
+//    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<Category> categories = new HashSet<>();
+
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Category> categories = new HashSet<>();
+    private Set<Product> products  = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

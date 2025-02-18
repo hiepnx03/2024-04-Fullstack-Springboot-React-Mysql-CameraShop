@@ -9,7 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.Normalizer;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 @Component
@@ -49,8 +51,9 @@ public class DataLoader implements CommandLineRunner {
             System.out.println("6. Create Payments");
             System.out.println("7. Create Orders and Order Details");
             System.out.println("8. Create Addresses");
-            System.out.println("9. Add All Data (Categories, Products, Vouchers, Shipping Statuses, Payments, Orders, Addresses)");
-            System.out.println("10. Exit");
+            System.out.println("9. Create Brands");
+            System.out.println("10. Add All Data (Categories, Products, Vouchers, Shipping Statuses, Payments, Orders, Addresses)");
+            System.out.println("11. Exit");
 
             int choice = scanner.nextInt();
 
@@ -86,10 +89,13 @@ public class DataLoader implements CommandLineRunner {
                     createAddresses();
                     break;
                 case 9:
+                    addBrands();
+                    break;
+                case 10:
                     addAllData();
                     exit = true;
                     break;
-                case 10:
+                case 11:
                     System.out.println("Exiting program...");
                     exit = true;
                     break;
@@ -109,6 +115,7 @@ public class DataLoader implements CommandLineRunner {
         createClientUserIfNotExist();
 
         addBrands();
+
         List<Category> categories = addCategories();
         addProducts(categories);
 
@@ -229,7 +236,6 @@ public class DataLoader implements CommandLineRunner {
         camera.setEditable(true);
         camera.setVisible(true);
         camera.setStatus(1);
-        camera.setBrand(canonBrand);  // Gán Brand Canon cho Category Camera
         camera.setCreatedBy("ADMIN");
         camera.setUpdatedBy("ADMIN");
         categoryRepository.save(camera);  // Lưu danh mục
@@ -245,7 +251,6 @@ public class DataLoader implements CommandLineRunner {
         mirrorless.setEditable(true);
         mirrorless.setVisible(true);
         mirrorless.setStatus(1);
-        mirrorless.setBrand(sonyBrand);  // Gán Brand Sony cho Category Mirrorless
         mirrorless.setCreatedBy("ADMIN");
         mirrorless.setUpdatedBy("ADMIN");
         categoryRepository.save(mirrorless);  // Lưu danh mục
@@ -261,7 +266,6 @@ public class DataLoader implements CommandLineRunner {
         dslr.setEditable(true);
         dslr.setVisible(true);
         dslr.setStatus(1);
-        dslr.setBrand(nikonBrand);  // Gán Brand Nikon cho Category DSLR
         dslr.setCreatedBy("ADMIN");
         dslr.setUpdatedBy("ADMIN");
         categoryRepository.save(dslr);  // Lưu danh mục
@@ -277,7 +281,6 @@ public class DataLoader implements CommandLineRunner {
         instant.setEditable(true);
         instant.setVisible(true);
         instant.setStatus(1);
-        instant.setBrand(fujifilmBrand);  // Gán Brand Fujifilm cho Category Instant Cameras
         instant.setCreatedBy("ADMIN");
         instant.setUpdatedBy("ADMIN");
         categoryRepository.save(instant);  // Lưu danh mục
@@ -293,7 +296,6 @@ public class DataLoader implements CommandLineRunner {
         camcorders.setEditable(true);
         camcorders.setVisible(true);
         camcorders.setStatus(1);
-        camcorders.setBrand(panasonicBrand);  // Gán Brand Panasonic cho Category Camcorders
         camcorders.setCreatedBy("ADMIN");
         camcorders.setUpdatedBy("ADMIN");
         categoryRepository.save(camcorders);  // Lưu danh mục
@@ -309,9 +311,32 @@ public class DataLoader implements CommandLineRunner {
 
     private void addProducts(List<Category> categories) {
         System.out.println("Adding products...");
+
+        // Lấy các Brand đã tạo từ trước
+//1        Brand canonBrand = brandRepository.findByName("Canon");
+//        Brand sonyBrand = brandRepository.findByName("Sony");
+//        Brand nikonBrand = brandRepository.findByName("Nikon");
+//        Brand fujifilmBrand = brandRepository.findByName("Fujifilm");
+//        Brand panasonicBrand = brandRepository.findByName("Panasonic");
+
+        // Lấy các Brand đã tạo từ trước
+        List<Brand> brands = List.of(
+                brandRepository.findByName("Canon"),
+                brandRepository.findByName("Sony"),
+                brandRepository.findByName("Nikon"),
+                brandRepository.findByName("Fujifilm"),
+                brandRepository.findByName("Panasonic")
+        );
+
         IntStream.rangeClosed(1, 5).forEach(i -> {
             Product product = new Product();
-            product.setName("Camera " + i); // Đây là tên sản phẩm
+
+            String productName = "Camera " + i;
+            String productSlug = generateSlug(productName);
+
+            product.setName(productName);
+            product.setSlug(productSlug);
+
             product.setDescription("Mô tả về Máy ảnh " + i);
             product.setImportPrice(2000.0 * i);
             product.setListPrice(2500.0 * i);
@@ -319,11 +344,28 @@ public class DataLoader implements CommandLineRunner {
             product.setQuantity(50.0 * i);
             product.setSoldQuantity(10.0 * i);
             product.setStatus(1);
+            product.setCreatedBy("ADMIN");
+            product.setUpdatedBy("ADMIN");
             product.setCategories(getCameraCategories(categories));
+//1            product.setBrand(canonBrand);
+            // Lấy Brand ngẫu nhiên từ danh sách
+            Brand randomBrand = brands.get(ThreadLocalRandom.current().nextInt(0, brands.size()));
+            product.setBrand(randomBrand);
             productRepository.save(product);  // Lưu sản phẩm vào cơ sở dữ liệu
         });
 
         System.out.println("5 sản phẩm máy ảnh đã được thêm vào cơ sở dữ liệu!");
+    }
+
+    // Hàm tạo slug từ name
+    private String generateSlug(String input) {
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        String slug = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .replaceAll("[^a-zA-Z0-9\\s]", "")
+                .trim()
+                .replaceAll("\\s+", "-")
+                .toLowerCase();
+        return slug;
     }
 
     private Set<Category> getCameraCategories(List<Category> categories) {

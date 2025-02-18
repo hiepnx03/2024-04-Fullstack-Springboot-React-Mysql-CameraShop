@@ -49,5 +49,8 @@ public class ProductDTO {
     @NotEmpty(message = "Danh sách hình ảnh không được để trống.")
     private Set<ImageDTO> images; // Danh sách hình ảnh
 
+    @NotNull(message = "Brand ID cannot be null.")
+    private Long brandId;
+
     // Constructors, getters, and setters (lombok)
 }

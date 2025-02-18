@@ -6,7 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-
 public class BrandConverter {
     private final ModelMapper modelMapper;
 
@@ -14,11 +13,11 @@ public class BrandConverter {
         this.modelMapper = modelMapper;
     }
 
-    public BrandDTO converterDTO(Brand brand) {
+    public BrandDTO toDTO(Brand brand) {
         return modelMapper.map(brand, BrandDTO.class);
     }
 
-    public Brand converterBrandDTO(BrandDTO brandDTO) {
+    public Brand toEntity(BrandDTO brandDTO) {
         return modelMapper.map(brandDTO, Brand.class);
     }
 }

@@ -35,5 +35,5 @@ public class BrandDTO {
     @NotNull(message = "Trạng thái xóa không được để trống.")
     private boolean deleted = false; // Trạng thái xóa (logical delete)
 
-    private List<CategoryDTO> categories;
+    private List<ProductDTO> products;
 }

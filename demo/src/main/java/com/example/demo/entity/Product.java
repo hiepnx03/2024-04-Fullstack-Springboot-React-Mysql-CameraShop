@@ -51,6 +51,13 @@ public class Product extends Base<String> implements Serializable {
     )
     private Set<Category> categories = new HashSet<>();
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    @JsonIgnore
+    private Brand brand;
+
+
     @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Image> images = new HashSet<>();
@@ -67,4 +74,5 @@ public class Product extends Base<String> implements Serializable {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
 }
